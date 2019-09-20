@@ -1,4 +1,4 @@
-### Author: Praneet Singh Solanki
+# WIP - Currently rebuilding complete pipeline
 
 # DevOps For AI
 This template contains code and pipeline definition for a machine learning project demonstrating how to automate the end to end ML/AI project. The build pipelines include DevOps tasks for data sanity test, unit test, model training on different compute targets, model version management, model evaluation/model selection, model deployment as realtime web service, staged deployment to QA/prod, integration testing and functional testing.
