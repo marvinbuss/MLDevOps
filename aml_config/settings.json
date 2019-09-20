@@ -1,0 +1,215 @@
+{
+    "workspace":{
+        "name": "myworkspace",
+        "subscription_id": "558bd446-4212-46a2-908c-9ab0a628705e",
+        "resource_group": "azure-ml-service-rg",
+        "location": "westeurope",
+        "friendly_name": "My Workspace",
+        "config": {
+            "path": "aml_config",
+            "file_name": "config.json"
+        }
+    },
+    "experiment":{
+        "name": "devops-ai-demo",
+        "source_directory": "./code/training",
+        "entry_script": "train.py",
+        "script_parameters": {},
+        "user_managed": false,
+        "environment_variables": {},
+        "source_directory_datastore": null,
+        "dependencies": {
+            "conda_packages": [],
+            "pip_packages": [],
+            "conda_dependencies_file": null,
+            "pip_requirements_file": null
+        },
+        "framework": {
+            "name": "other",
+            "chainer": {
+                "framework_version": "5.1.0",
+                "_enable_optimized_mode": false
+            },
+            "pytorch": {
+                "framework_version": "1.1",
+                "_enable_optimized_mode": false
+            },
+            "sklearn": {
+                "framework_version": "0.20.3",
+                "_enable_optimized_mode": false
+            },
+            "tensorflow": {
+                "framework_version": "1.13",
+                "_enable_optimized_mode": false
+            }
+        },
+        "distributed_training":{
+            "backend_config": null,
+            "node_count": 1,
+            "mpi": {
+                "process_count_per_node": 1
+            },
+            "parameter_server": {
+                "worker_count": 1,
+                "parameter_server_count": "1"
+            }
+        },
+        "docker": {
+            "use_docker": true,
+            "use_gpu": false,
+            "shm_size": "1g",
+            "custom_image": null,
+            "custom_image_registry_details": {
+                "address": null,
+                "username": null,
+                "password": null
+            }
+        },
+        "hyperparameter_sampling": {
+            "use_hyperparameter_sampling": false,
+            "method": null,
+            "parameters": {
+                "value_name": {
+                    "distribution": "quniform",
+                    "parameters": {
+                        "min_value": 1.0,
+                        "max_value": 2.0,
+                        "q": 2
+                    }
+                },
+                "value_name2": {
+                    "distribution": "uniform",
+                    "parameters": {
+                        "min_value": 1.0,
+                        "max_value": 2.0
+                    }
+                }
+            },
+            "policy": {
+                "name": "bandit",
+                "evaluation_interval": 1,
+                "delay_evaluation": 0,
+                "bandit": {
+                    "slack_factor": 0.15,
+                    "slack_amount": null
+                },
+                "truncationselection": {
+                    "truncation_percentage": 5
+                }
+            },
+            "primary_metric_name": "",
+            "primary_metric_goal": "max",
+            "max_total_runs": 8,
+            "max_concurrent_runs": 1,
+            "max_duration_minutes": 10080
+        },
+        "resume_state": {
+            "resume_from_state": false,
+            "data_reference_name": null,
+            "datapath_compute_binding": null
+        },
+        "history": {
+            "output_collection": true,
+            "snapshotProject": true,
+            "directoriesToWatch": ["logs"]
+        },
+        "run_tags": {
+            "submitted": "DevOps"
+        },
+        "data_references": {},
+        "max_run_duration_seconds": null,
+        "use_custom_environment": false
+    },
+    "model_evaluation": {
+        "model_name": "my_model.pkl"
+    },
+    "compute_target": {
+        "compute_target_to_use": "amlcompute",
+        "amlcompute":{
+            "name": "my-aml-cluster",
+            "vm_size": "STANDARD_D2_V2",
+            "vm_priority": "dedicated",
+            "min_nodes": 0,
+            "max_nodes": 4,
+            "idle_seconds_before_scaledown": "300",
+            "vnet_resource_group_name": null,
+            "vnet_name": null,
+            "subnet_name": null,
+            "admin_username": null,
+            "admin_user_password": null,
+            "admin_user_ssh_key": null,
+            "tags": {
+                "Creator": "DevOps"
+            },
+            "description": "AMLCompute for DevOps for ML"
+        },
+        "dsvm":{
+            "name": "my-vm",
+            "vm_size": "Standard_D2_v2",
+            "location": null,
+            "ssh_port": null
+        },
+        "remotecompute":{
+            "name": "my-remote-vm",
+            "use_ssh_auth": false,
+            "address": "",
+            "username": "",
+            "password": null,
+            "ssh_port": 22,
+            "private_key_file": null,
+            "private_key_passphrase": null
+        }
+    },
+    "deployment": {
+        "model": {
+            "name": "my-model"
+        },
+        "image": {
+            "name": "my-image"
+        },
+        "aciservice": {
+            "name": "my-aci-webservice"
+        }
+    },
+    "environment":{
+        "name": "myenv",
+        "python_version": "3.6.2",
+        "conda_packages": [],
+        "pip_packages": [],
+        "pin_sdk_version": true,
+        "dependencies_config": {
+            "path": "aml_config",
+            "file_name": "config.json"
+        },
+        "env_variables": {
+            "Creator": "DevOps"
+        },
+        "user_managed_dependencies": false,
+        "docker":{
+            "enabled": true,
+            "gpu_support": true,
+            "mpi_image": false,
+            "arguments": [],
+            "base_image": null,
+            "base_image_registry": {
+                "address": null,
+                "username": null,
+                "password": null
+            },
+            "shared_volumes": true,
+            "shm_size": "1g"
+        },
+        "spark": {
+            "repositories": [],
+            "packages": [],
+            "precache_packages": true
+        },
+        "databricks": {
+            "maven_libraries": [],
+            "pypi_libraries": [],
+            "rcran_libraries": [],
+            "jar_libraries": [],
+            "egg_libraries": []
+        }
+    }
+}
