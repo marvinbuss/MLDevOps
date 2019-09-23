@@ -5,7 +5,9 @@ on:
     branches:
     - master
     paths:
-    - 'code/*'
+    - 'code/training/*'
+    - 'code/testing/*'
+    - 'code/scoring/*'
 
 jobs:
   training:

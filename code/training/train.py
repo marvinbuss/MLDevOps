@@ -74,7 +74,6 @@ print("Uploaded the model {} to experiment {}".format(model_name, run.experiment
 dirpath = os.getcwd()
 print(dirpath)
 
-
 # register the model
 # run.log_model(file_name = model_name)
 # print('Registered the model {} to run history {}'.format(model_name, run.history.name))
