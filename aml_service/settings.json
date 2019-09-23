@@ -174,7 +174,7 @@
             "description": "Model registered by DevOps",
             "model_framework": null,
             "model_framework_version": null,
-            "datasets": [null]
+            "datasets": null
         },
         "image": {
             "name": "my-image"
