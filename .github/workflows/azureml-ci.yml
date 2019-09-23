@@ -39,14 +39,6 @@ jobs:
       run: |
         python 'aml_service/ci_cd/01-AttachAmlCluster.py'
     
-    #- name: Creating or loading Data Science VM
-    #  run: |
-    #    python 'aml_service/ci_cd/02-AttachDSVM.py'
-    
-    #- name: Attaching or loading remote compute
-    #  run: |
-    #    python 'aml_service/ci_cd/03-AttachRemoteCompute.py'
-    
     - name: Train Model
       run: |
         python 'aml_service/ci_cd/10-Train.py'
