@@ -51,7 +51,7 @@ jobs:
       run: |
         python 'aml_service/ci_cd/10-Train.py'
     
-    - name: Register Model
+    - name: Evaluate and register Model
       run: |
         python 'aml_service/ci_cd/20-RegisterModel.py'
     
