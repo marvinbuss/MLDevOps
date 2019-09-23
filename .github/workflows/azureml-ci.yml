@@ -6,6 +6,8 @@ on:
     - master
     paths:
     - 'code/training/*'
+    - 'code/testing/*'
+    - 'code/scoring/*'
 
 jobs:
   training:
