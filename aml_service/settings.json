@@ -6,7 +6,7 @@
         "location": "westeurope",
         "friendly_name": "My Workspace",
         "config": {
-            "path": "aml_config",
+            "path": "aml_service",
             "file_name": "config.json"
         }
     },
