@@ -37,48 +37,38 @@ import json
 import subprocess
 from typing import Tuple, List
 
-# run_history_name = 'devops-ai'
-# os.makedirs('./outputs', exist_ok=True)
-# #ws.get_details()
-# Start recording results to AML
-# run = Run.start_logging(workspace = ws, history_name = run_history_name)
-run = Run.get_submitted_run()
+RANDOM_STATE = 42
+MODEL_NAME = "sklearn_regression_model.pkl"
 
+print("Creating output folder")
+os.makedirs('./outputs', exist_ok=True)
+
+print("Getting Run context")
+run = Run.get_context()
+
+print("Loading data")
 X, y = load_diabetes(return_X_y=True)
-columns = ["age", "gender", "bmi", "bp", "s1", "s2", "s3", "s4", "s5", "s6"]
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+
+print("Creating train test split")
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=RANDOM_STATE)
 data = {"train": {"X": X_train, "y": y_train}, "test": {"X": X_test, "y": y_test}}
 
-print("Running train.py")
-
-# Randomly pic alpha
+print("Training a ridge regression model with sklearn and random alpha value")
 alphas = np.arange(0.0, 1.0, 0.05)
 alpha = alphas[np.random.choice(alphas.shape[0], 1, replace=False)][0]
-print(alpha)
-run.log("alpha", alpha)
+
 reg = Ridge(alpha=alpha)
 reg.fit(data["train"]["X"], data["train"]["y"])
 preds = reg.predict(data["test"]["X"])
-run.log("mse", mean_squared_error(preds, data["test"]["y"]))
+mse = mean_squared_error(preds, data["test"]["y"])
+print("Alpha is {0:.2f}, and MSE is {1:0.2f}".format(alpha, mse))
 
-# Save model as part of the run history
-model_name = "sklearn_regression_model.pkl"
-# model_name = "."
+print("Logging values")
+run.log("alpha", alpha)
+run.log("mse", mse)
 
+print("Saving model to output folder")
 with open(model_name, "wb") as file:
-    joblib.dump(value=reg, filename=model_name)
+    joblib.dump(value=reg, filename=MODEL_NAME)
 
-# upload the model file explicitly into artifacts
-run.upload_file(name="./outputs/" + model_name, path_or_stream=model_name)
-print("Uploaded the model {} to experiment {}".format(model_name, run.experiment.name))
-dirpath = os.getcwd()
-print(dirpath)
-
-# register the model
-# run.log_model(file_name = model_name)
-# print('Registered the model {} to run history {}'.format(model_name, run.history.name))
-
-print("Following files are uploaded ")
-print(run.get_file_names())
-run.complete()
-
+print("Training successful")
