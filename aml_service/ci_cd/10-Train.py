@@ -201,7 +201,7 @@ else:
         entry_script=experiment_settings["entry_script"],
         script_params=experiment_settings["script_parameters"],
         node_count=experiment_settings["distributed_training"]["node_count"],
-        process_count_per_node=experiment_settings["process_count_per_node"],
+        process_count_per_node=experiment_settings["distributed_training"]["mpi"]["process_count_per_node"],
         distributed_training=distrib_training_backend,
         use_gpu=experiment_settings["docker"]["use_gpu"],
         use_docker=experiment_settings["docker"]["use_docker"],
