@@ -27,9 +27,9 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r 'aml_service/requirements.txt'
+        pip install -r 'aml_service/ci_cd/requirements.txt'
     
     - name: Create or connect to Workspace
       run: |
-        python 'aml_service/00-WorkSpace.py'
+        python 'aml_service/ci_cd/00-WorkSpace.py'
     
