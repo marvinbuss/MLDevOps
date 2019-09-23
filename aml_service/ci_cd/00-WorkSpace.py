@@ -34,7 +34,7 @@ print("Current directory: " + os.getcwd())
 
 # Load the JSON settings file
 print("Loading settings")
-with open(os.path.join("aml_config", "settings.json")) as f:
+with open(os.path.join("aml_service", "settings.json")) as f:
     settings = json.load(f)
 workspace_settings = settings["workspace"]
 

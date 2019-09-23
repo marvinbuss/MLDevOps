@@ -38,7 +38,7 @@ from helper import utils
 
 # Load the JSON settings file and relevant section
 print("Loading settings")
-with open(os.path.join("aml_config", "settings.json")) as f:
+with open(os.path.join("aml_service", "settings.json")) as f:
     settings = json.load(f)
 experiment_settings = settings["experiment"]
 compute_target_to_use = experiment_settings["compute_target"]["compute_target_to_use"].strip().lower()
@@ -274,5 +274,5 @@ if run.get_status() == "Failed":
 run_details = {}
 run_details["run_id"] = run.id
 run_details["experiment_name"] = run.experiment.name
-with open(os.path.join("aml_config", "run_details.json"), "w") as outfile:
+with open(os.path.join("aml_service", "run_details.json"), "w") as outfile:
     json.dump(run_details, outfile)
