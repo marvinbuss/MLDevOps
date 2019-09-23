@@ -50,9 +50,13 @@ try:
 
     # Check settings and redeploy if required settings have changed
     print("Found existing cluster")
+    print(cluster.vm_size)
+    print(cluster.vm_priority)
     if cluster.vm_size != aml_settings["vm_size"] or cluster.vm_priority != aml_settings["vm_priority"]:
-        cluster.delete()
-        raise ComputeTargetException("Cluster is of incorrect size or has incorrect priority. Deleting cluster and provisioning a new one.")
+        #cluster.delete()
+        #cluster.wait_for_completion(show_output=True)
+        #raise ComputeTargetException("Cluster is of incorrect size or has incorrect priority. Deleting cluster and provisioning a new one.")
+        pass
     
     # Update AMLCompute
     print("Updating settings of Cluster")
