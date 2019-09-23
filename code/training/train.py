@@ -68,7 +68,7 @@ run.log("alpha", alpha)
 run.log("mse", mse)
 
 print("Saving model to output folder")
-with open(model_name, "wb") as file:
-    joblib.dump(value=reg, filename=MODEL_NAME)
+with open(MODEL_NAME, "wb") as file:
+    joblib.dump(value=reg, filename=os.path.join("./outputs/", MODEL_NAME))
 
 print("Training successful")
