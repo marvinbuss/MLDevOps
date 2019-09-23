@@ -120,9 +120,6 @@
         "max_run_duration_seconds": null,
         "use_custom_environment": false
     },
-    "model_evaluation": {
-        "model_name": "my_model.pkl"
-    },
     "compute_target": {
         "compute_target_to_use": "amlcompute",
         "amlcompute":{
@@ -162,7 +159,22 @@
     },
     "deployment": {
         "model": {
-            "name": "my-model"
+            "name": "my-model",
+            "path": "outputs/my-model.pkl",
+            "evaluation_parameters": {
+                "larger_is_better": [],
+                "smaller_is_better": ["mse"]
+            },
+            "tags":{
+                "Creator": "DevOps"
+            },
+            "properties": {
+                "Creator": "DevOps"
+            },
+            "description": "Model registered by DevOps",
+            "model_framework": null,
+            "model_framework_version": null,
+            "datasets": [null]
         },
         "image": {
             "name": "my-image"
