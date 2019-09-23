@@ -35,23 +35,3 @@ jobs:
       run: |
         python 'aml_service/ci_cd/00-WorkSpace.py'
     
-    - name: Create or loading Azure Machine Learning Compute
-      run: |
-        python 'aml_service/ci_cd/01-AttachAmlCluster.py'
-    
-    #- name: Creating or loading Data Science VM
-    #  run: |
-    #    python 'aml_service/ci_cd/02-AttachDSVM.py'
-    
-    #- name: Attaching or loading remote compute
-    #  run: |
-    #    python 'aml_service/ci_cd/03-AttachRemoteCompute.py'
-    
-    - name: Train Model
-      run: |
-        python 'aml_service/ci_cd/10-Train.py'
-    
-    - name: Register Model
-      run: |
-        python 'aml_service/ci_cd/20-RegisterModel.py'
-    
