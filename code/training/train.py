@@ -38,7 +38,7 @@ import subprocess
 from typing import Tuple, List
 
 RANDOM_STATE = 42
-MODEL_NAME = "sklearn_regression_model.pkl"
+MODEL_NAME = "my-model.pkl"
 
 print("Creating output folder")
 os.makedirs('./outputs', exist_ok=True)
