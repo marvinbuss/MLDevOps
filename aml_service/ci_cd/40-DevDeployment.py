@@ -26,6 +26,8 @@ POSSIBILITY OF SUCH DAMAGE.
 import os, json
 from azureml.core import Workspace
 from azureml.core.model import Model
+from azureml.core.webservice import AciWebservice, Webservice
+from azureml.core.authentication import AzureCliAuthentication
 
 # Load the JSON settings file and relevant section
 print("Loading settings")
@@ -44,3 +46,13 @@ print(ws.name, ws.resource_group, ws.location, ws.subscription_id, sep="\n")
 print("Loading Model")
 model = Model(workspace=ws, name=deployment_settings["model"]["name"])
 
+# Loading Model Profile
+print("Loading Model Profile")
+with open(os.path.join("aml_service", "profiling_result.json")) as f:
+    profiling_result = json.load(f)
+
+try:
+    dev_service = Webservice(workspace=ws, name=aci_service_name)
+    dev_service.update(image=image)
+except expression as identifier:
+    pass
