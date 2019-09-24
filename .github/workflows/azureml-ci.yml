@@ -46,3 +46,7 @@ jobs:
     - name: Evaluate and Register Model
       run: |
         python 'aml_service/ci_cd/20-RegisterModel.py'
+    
+    - name: Profile Model
+      run: |
+        python 'aml_service/ci_cd/30-ProfileModel.py'
