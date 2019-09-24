@@ -26,16 +26,16 @@ jobs:
       with:
         python-version: 3.7
     
-    - name: Install dependencies
+    - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r 'aml_service/ci_cd/requirements.txt'
     
-    - name: Create or connect to Workspace
+    - name: Create or Connect to Workspace
       run: |
         python 'aml_service/ci_cd/00-WorkSpace.py' --subscription-id ${{ secrets.SUBSCRIPTION_ID }} --workspace-name ${{ secrets.WORKSPACE_NAME }} --resource-group ${{ secrets.RESOURCE_GROUP }} --location ${{ secrets.LOCATION }} --friendly-name ${{ secrets.FRIENDLY_NAME }}
     
-    - name: Create or loading Azure Machine Learning Compute
+    - name: Create or Load Azure Machine Learning Compute
       run: |
         python 'aml_service/ci_cd/01-AttachAmlCluster.py'
     
@@ -43,6 +43,6 @@ jobs:
       run: |
         python 'aml_service/ci_cd/10-Train.py'
     
-    - name: Evaluate and register Model
+    - name: Evaluate and Register Model
       run: |
         python 'aml_service/ci_cd/20-RegisterModel.py'
