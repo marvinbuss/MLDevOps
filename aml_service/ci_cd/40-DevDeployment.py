@@ -25,7 +25,7 @@ POSSIBILITY OF SUCH DAMAGE.
 """
 import os, json
 from azureml.core import Workspace
-from azureml.core.model import Model
+from azureml.core.model import Model, InferenceConfig
 from azureml.core.webservice import AciWebservice
 from azureml.core.authentication import AzureCliAuthentication
 
@@ -35,6 +35,12 @@ with open(os.path.join("aml_service", "settings.json")) as f:
     settings = json.load(f)
 workspace_config_settings = settings["workspace"]["config"]
 deployment_settings = settings["deployment"]
+aci_settings = settings["compute_target"]["deployment"]["aci"]
+
+# Loading Model Profile
+print("Loading Model Profile")
+with open(os.path.join("aml_service", "profiling_result.json")) as f:
+    profiling_result = json.load(f)
 
 # Get Workspace
 print("Loading Workspace")
@@ -46,10 +52,14 @@ print(ws.name, ws.resource_group, ws.location, ws.subscription_id, sep="\n")
 print("Loading Model")
 model = Model(workspace=ws, name=deployment_settings["model"]["name"])
 
-# Loading Model Profile
-print("Loading Model Profile")
-with open(os.path.join("aml_service", "profiling_result.json")) as f:
-    profiling_result = json.load(f)
+# Create image registry configuration 
+if deployment_settings["image"]["docker"]["custom_image"]:
+    container_registry = ContainerRegistry()
+    container_registry.address = deployment_settings["image"]["docker"]["custom_image_registry_details"]["address"]
+    container_registry.username = deployment_settings["image"]["docker"]["custom_image_registry_details"]["username"]
+    container_registry.password = deployment_settings["image"]["docker"]["custom_image_registry_details"]["password"]
+else:
+    container_registry = None
 
 # Defining inference config
 print("Defining InferenceConfig")
@@ -71,9 +81,32 @@ try:
     print("Successfully updated existing ACI service")
 except:
     print("Failed to update ACI service... Creating new ACI instance")
-    aciconfig = AciWebservice.deploy_configuration(
-        cpu_cores=1,
-        memory_gb=1,
-        tags={"area": "diabetes", "type": "regression"},
-        description="A sample description",
-    )
+    aci_config = AciWebservice.deploy_configuration(cpu_cores=profiling_result["cpu"],
+                                                   memory_gb=profiling_result["memory"],
+                                                   tags=aci_settings["tags"],
+                                                   properties=aci_settings["properties"],
+                                                   description=aci_settings["description"])
+    dev_service = Model.deploy(workspace=ws,
+                               name=#TODO,
+                               models=[model],
+                               inference_config=inference_config,
+                               deployment_config=aci_config)
+    dev_service.wait_for_deployment(show_output=True)
+
+print("Testing ACI web service")
+#TODO
+input_j = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]]
+print(input_j)
+test_sample = json.dumps({"data": input_j})
+test_sample = bytes(test_sample, encoding="utf8")
+try:
+    prediction = dev_service.run(input_data=test_sample)
+    print(prediction)
+except Exception as e:
+    result = str(e)
+    print(result)
+    raise Exception("ACI service is not working as expected")
+
+# Delete aci after test
+print("Deleting ACI after successful test")
+dev_service.delete()

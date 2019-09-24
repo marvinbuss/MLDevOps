@@ -149,7 +149,13 @@
         },
         "deployment": {
             "aci": {
-
+                "tags": {
+                    "Creator": "GitHub Actions"
+                },
+                "properties": {
+                    "Creator": "GitHub Actions"
+                },
+                "description": "ACI Service created by GitHub Actions"
             }
         }
     },
