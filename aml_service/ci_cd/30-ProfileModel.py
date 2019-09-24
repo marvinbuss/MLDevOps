@@ -47,11 +47,11 @@ print("Loading Model")
 model = Model(workspace=ws, name=deployment_settings["model"]["name"])
 
 # Create image registry configuration 
-if deployment_settings["docker"]["custom_image"]:
+if deployment_settings["image"]["docker"]["custom_image"]:
     container_registry = ContainerRegistry()
-    container_registry.address = deployment_settings["docker"]["custom_image_registry_details"]["address"]
-    container_registry.username = deployment_settings["docker"]["custom_image_registry_details"]["username"]
-    container_registry.password = deployment_settings["docker"]["custom_image_registry_details"]["password"]
+    container_registry.address = deployment_settings["image"]["docker"]["custom_image_registry_details"]["address"]
+    container_registry.username = deployment_settings["image"]["docker"]["custom_image_registry_details"]["username"]
+    container_registry.password = deployment_settings["image"]["docker"]["custom_image_registry_details"]["password"]
 else:
     container_registry = None
 
@@ -61,11 +61,11 @@ test_sample = json.dumps({'data': [[1,2,3,4,5,6,7,8,9,10]]})
 inference_config = InferenceConfig(entry_script=deployment_settings["image"]["entry_script"],
                                    source_directory=deployment_settings["image"]["source_directory"],
                                    runtime=deployment_settings["image"]["runtime"],
-                                   conda_file=deployment_settings["image"]["docker"]["conda_file"],
+                                   conda_file=deployment_settings["image"]["conda_file"],
                                    extra_docker_file_steps=deployment_settings["image"]["docker"]["extra_docker_file_steps"],
                                    enable_gpu=deployment_settings["image"]["docker"]["use_gpu"],
                                    description=deployment_settings["image"]["description"],
-                                   base_image=deployment_settings["image"]["custom_image"],
+                                   base_image=deployment_settings["image"]["docker"]["custom_image"],
                                    base_image_registry=container_registry,
                                    cuda_version=deployment_settings["image"]["docker"]["cuda_version"])
 #TODO: Enable custom environment and register environment

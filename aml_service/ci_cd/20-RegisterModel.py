@@ -101,4 +101,5 @@ if promote_new_model:
                                datasets=deployment_settings["model"]["datasets"])
 else:
     print("No new model to register thus no need to create new scoring image")
+    #raise Exception('No new model to register as production model perform better')
     sys.exit(0)
