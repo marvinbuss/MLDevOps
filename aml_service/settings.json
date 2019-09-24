@@ -166,7 +166,7 @@
             "datasets": null
         },
         "image": {
-            "entry_script": "code/scoring/score.py",
+            "entry_script": "score.py",
             "source_directory": "code/scoring/",
             "runtime": "python",
             "conda_file": "code/scoring/conda_dependencies.yml",
