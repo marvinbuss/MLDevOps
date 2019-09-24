@@ -24,7 +24,7 @@ ARISING IN ANY WAY OUT OF THE USE OF THE SOFTWARE CODE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
 
-import os, json, sys
+import os, json, sys, argparse
 import azureml.core
 from azureml.core import Workspace
 from azureml.core.authentication import AzureCliAuthentication
@@ -32,11 +32,21 @@ from azureml.core.authentication import AzureCliAuthentication
 print("SDK Version of azureml: ", azureml.core.VERSION)
 print("Current directory: " + os.getcwd())
 
+# Parse Arguments
+print("Parsing arguments")
+parser = argparse.ArgumentParser(description="Azure Machine Learning Service - CI/CD")
+parser.add_argument("--subscription-id", type=str,  dest="subscription_id", help="ID of the Subscription that should be used")
+parser.add_argument("--workspace-name", type=str,  dest="workspace_name", help="Name of the Azure Machine Learning Workscpace")
+parser.add_argument("--resource-group", type=str,  dest="resource_group", help="Name of the Resource Group")
+parser.add_argument("--location", type=str,  dest="location", help="Region in Azure")
+parser.add_argument("--friendly-name", type=str,  dest="friendly_name", help="Friendly name of the Azure Machine Learning Workspace")
+args = parser.parse_args()
+
 # Load the JSON settings file
 print("Loading settings")
 with open(os.path.join("aml_service", "settings.json")) as f:
     settings = json.load(f)
-workspace_settings = settings["workspace"]
+workspace_config_settings = settings["workspace"]["config"]
 
 # Use Azure CLI authentication
 cli_auth = AzureCliAuthentication()
@@ -44,9 +54,9 @@ cli_auth = AzureCliAuthentication()
 try:
     print("Loading existing Workspace")
     ws = Workspace.get(
-        name=workspace_settings["name"],
-        subscription_id=workspace_settings["subscription_id"],
-        resource_group=workspace_settings["resource_group"],
+        name=args.workspace_name,
+        subscription_id=args.subscription_id,
+        resource_group=args.resource_group,
         auth=cli_auth
     )
     print("Found existing Workspace")
@@ -54,18 +64,19 @@ except:
     print("Loading failed")
     print("Creating new Workspace")
     ws = Workspace.create(
-        name=workspace_settings["name"],
+        name=args.workspace_name,
         auth=cli_auth,
-        subscription_id=workspace_settings["subscription_id"],
-        resource_group=workspace_settings["resource_group"],
-        location=workspace_settings["location"],
+        subscription_id=args.subscription_id,
+        resource_group=args.resource_group,
+        location=args.location,
         create_resource_group=True,
-        friendly_name=workspace_settings["friendly_name"],
+        friendly_name=args.friendly_name,
         show_output=True
     )
 
 # Write out the Workspace ARM properties to a config file
-ws.write_config(path=workspace_settings["config"]["path"], file_name=workspace_settings["config"]["file_name"])
+ws.write_config(path=workspace_config_settings["path"], file_name=workspace_config_settings["file_name"])
 
-# Print Workspace details
-print(ws.name, ws.resource_group, ws.location, ws.subscription_id, sep="\n")
+# Print Workspace details --> only print, if repository is private
+#print(ws.name, ws.resource_group, ws.location, ws.subscription_id, sep="\n")
+print("Successfully loaded Workspace")

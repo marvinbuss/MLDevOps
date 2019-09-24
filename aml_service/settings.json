@@ -1,15 +1,4 @@
 {
-    "workspace":{
-        "name": "myworkspace",
-        "subscription_id": "558bd446-4212-46a2-908c-9ab0a628705e",
-        "resource_group": "azure-ml-service-rg",
-        "location": "westeurope",
-        "friendly_name": "My Workspace",
-        "config": {
-            "path": "aml_service",
-            "file_name": "config.json"
-        }
-    },
     "experiment":{
         "name": "devops-ai-demo",
         "source_directory": "./code/training",
@@ -183,45 +172,10 @@
             "name": "my-aci-webservice"
         }
     },
-    "environment":{
-        "name": "myenv",
-        "python_version": "3.6.2",
-        "conda_packages": [],
-        "pip_packages": [],
-        "pin_sdk_version": true,
-        "dependencies_config": {
-            "path": "aml_config",
+    "workspace":{
+        "config": {
+            "path": "aml_service",
             "file_name": "config.json"
-        },
-        "env_variables": {
-            "Creator": "DevOps"
-        },
-        "user_managed_dependencies": false,
-        "docker":{
-            "enabled": true,
-            "gpu_support": true,
-            "mpi_image": false,
-            "arguments": [],
-            "base_image": null,
-            "base_image_registry": {
-                "address": null,
-                "username": null,
-                "password": null
-            },
-            "shared_volumes": true,
-            "shm_size": "1g"
-        },
-        "spark": {
-            "repositories": [],
-            "packages": [],
-            "precache_packages": true
-        },
-        "databricks": {
-            "maven_libraries": [],
-            "pypi_libraries": [],
-            "rcran_libraries": [],
-            "jar_libraries": [],
-            "egg_libraries": []
         }
     }
 }

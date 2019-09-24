@@ -72,3 +72,4 @@ with open(MODEL_NAME, "wb") as file:
     joblib.dump(value=reg, filename=os.path.join("./outputs/", MODEL_NAME))
 
 print("Training successful")
+
