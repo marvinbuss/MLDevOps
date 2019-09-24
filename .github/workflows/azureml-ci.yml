@@ -33,7 +33,7 @@ jobs:
     
     - name: Create or connect to Workspace
       run: |
-        python 'aml_service/ci_cd/00-WorkSpace.py'
+        python 'aml_service/ci_cd/00-WorkSpace.py' --subscription-id ${{ secrets.SUBSCRIPTION_ID }} --workspace-name ${{ secrets.WORKSPACE_NAME }} --resource-group ${{ secrets.RESOURCE_GROUP }} --location ${{ secrets.LOCATION }} --friendly-name ${{ secrets.FRIENDLY_NAME }}
     
     - name: Create or loading Azure Machine Learning Compute
       run: |
