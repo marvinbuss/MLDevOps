@@ -269,8 +269,7 @@ if run.get_status() == "Failed":
         )
     )
 
-# Writing the run id to /aml_config/run_id.json
-# TODO: rework this
+# Writing the run id to /aml_service/run_id.json
 run_details = {}
 run_details["run_id"] = run.id
 run_details["experiment_name"] = run.experiment.name
