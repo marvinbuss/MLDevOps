@@ -23,19 +23,15 @@ IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THE SOFTWARE CODE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
-import pickle
+import pickle, os
+import numpy as np
 from azureml.core import Workspace
 from azureml.core.run import Run
-import os
 from sklearn.datasets import load_diabetes
 from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 from sklearn.externals import joblib
-import numpy as np
-import json
-import subprocess
-from typing import Tuple, List
 
 RANDOM_STATE = 42
 MODEL_NAME = "my-model.pkl"
@@ -72,4 +68,3 @@ with open(MODEL_NAME, "wb") as file:
     joblib.dump(value=reg, filename=os.path.join("./outputs/", MODEL_NAME))
 
 print("Training successful")
-

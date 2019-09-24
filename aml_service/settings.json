@@ -1,6 +1,6 @@
 {
     "experiment":{
-        "name": "devops-ai-demo",
+        "name": "github-actions-ai-demo",
         "source_directory": "./code/training",
         "entry_script": "train.py",
         "script_parameters": {},
@@ -103,7 +103,7 @@
             "directoriesToWatch": ["logs"]
         },
         "run_tags": {
-            "submitted": "DevOps"
+            "submitted": "GitHub Actions"
         },
         "data_references": {},
         "max_run_duration_seconds": null,
@@ -125,9 +125,9 @@
             "admin_user_password": null,
             "admin_user_ssh_key": null,
             "tags": {
-                "Creator": "DevOps"
+                "Creator": "GitHub Actions"
             },
-            "description": "AMLCompute for DevOps for ML"
+            "description": "AMLCompute for GitHub Actions"
         },
         "dsvm":{
             "name": "my-vm",
@@ -155,21 +155,46 @@
                 "smaller_is_better": ["mse"]
             },
             "tags":{
-                "Creator": "DevOps"
+                "Creator": "GitHub Actions"
             },
             "properties": {
-                "Creator": "DevOps"
+                "Creator": "GitHub Actions"
             },
-            "description": "Model registered by DevOps",
+            "description": "Model registered by GitHub Actions",
             "model_framework": null,
             "model_framework_version": null,
             "datasets": null
         },
         "image": {
-            "name": "my-image"
+            "entry_script": "code/scoring/score.py",
+            "source_directory": "code/scoring/",
+            "runtime": "python",
+            "conda_file": "code/scoring/conda_dependencies.yml",
+            "docker": {
+                "use_gpu": false,
+                "cuda_version": null,
+                "custom_image": null,
+                "custom_image_registry_details": {
+                    "address": null,
+                    "username": null,
+                    "password": null
+                },
+                "extra_docker_file_steps": null
+            },
+            "tags":{
+                "Creator":"GitHub Actions"
+            },
+            "description": "Image registered by GitHub Actions",
+            "use_custom_environment": false
         },
-        "aciservice": {
-            "name": "my-aci-webservice"
+        "dev": {
+            "name": "devACI"
+        },
+        "test": {
+            "name": "testAKS"
+        },
+        "prod": {
+            "name": "prodAKS"
         }
     },
     "workspace":{

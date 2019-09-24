@@ -23,7 +23,7 @@ IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THE SOFTWARE CODE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
-import os, json, azureml.core
+import os, json, sys, azureml.core
 from azureml.core import Workspace, Experiment, Run
 from azureml.core.model import Model
 from azureml.core.authentication import AzureCliAuthentication
@@ -56,7 +56,7 @@ print("Register model only if it performs better.")
 try:
     # Loading run of production model
     print("Loading Run of Production Model to evaluate new model")
-    production_model = Model(ws, name=deployment_settings["model"]["name"])
+    production_model = Model(workspace=ws, name=deployment_settings["model"]["name"])
     production_model_run_id = production_model.tags.get(["run_id"])
     production_model_run = Run(experiment=experiment, run_id=production_model_run_id)
 
@@ -99,3 +99,6 @@ if promote_new_model:
                                model_framework_version=deployment_settings["model"]["model_framework_version"],
                                description=deployment_settings["model"]["description"],
                                datasets=deployment_settings["model"]["datasets"])
+else:
+    print("No new model to register thus no need to create new scoring image")
+    sys.exit(0)

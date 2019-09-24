@@ -26,16 +26,16 @@ POSSIBILITY OF SUCH DAMAGE.
 import pickle
 import json
 import numpy
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.externals import joblib
+from sklearn.linear_model import Ridge
 from azureml.core.model import Model
-
+from azureml.monitoring import ModelDataCollector
 #from inference_schema.schema_decorators import input_schema, output_schema
 #from inference_schema.parameter_types.numpy_parameter_type import NumpyParameterType
-from azureml.monitoring import ModelDataCollector
 
 def init():
     global model
-    from sklearn.externals import joblib
+    print("Model Initialized" + time.strftime("%H:%M:%S"))
 
     # load the model from file into a global object
     model_path = Model.get_model_path(model_name="sklearn_regression_model.pkl")
@@ -45,22 +45,27 @@ def init():
     inputs_dc = ModelDataCollector("sklearn_regression_model", identifier="inputs", feature_names=["AGE", "SEX", "BMI". "BP", "S1", "S2", "S3", "S4", "S5", "S6"])
     prediction_dc = ModelDataCollector("sklearn_regression_model", identifier="predictions", feature_names=["Y"])
 
-#input_sample = np.array([[10,9,8,7,6,5,4,3,2,1]])
+#input_sample = np.array([[10.0,9.0,8.0,7.0,6.0,5.0,4.0,3.0,2.0,1.0]])
 #output_sample = np.array([3726.995])
 
 #@input_schema('data', NumpyParameterType(input_sample))
 #@output_schema(NumpyParameterType(output_sample))
 def run(raw_data):
+    global inputs_dc, prediction_dc
     try:
         data = json.loads(raw_data)["data"]
         data = numpy.array(data)
         result = model.predict(data)
+
+        print("Saving Data " + time.strftime("%H:%M:%S"))
         inputs_dc.collect(data)
         prediction_dc.collect(result)
+
         return json.dumps({"result": result.tolist()})
     except Exception as e:
-        result = str(e)
-        return json.dumps({"error": result})
+        error = str(e)
+        print(error + time.strftime("%H:%M:%S"))
+        return json.dumps({"error": error})
 
 
 if __name__ == "__main__":
