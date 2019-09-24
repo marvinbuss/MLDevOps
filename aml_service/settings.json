@@ -110,40 +110,47 @@
         "use_custom_environment": false
     },
     "compute_target": {
-        "compute_target_to_use": "amlcompute",
-        "amlcompute":{
-            "name": "my-aml-cluster",
-            "vm_size": "STANDARD_D2_V2",
-            "vm_priority": "dedicated",
-            "min_nodes": 0,
-            "max_nodes": 4,
-            "idle_seconds_before_scaledown": "300",
-            "vnet_resource_group_name": null,
-            "vnet_name": null,
-            "subnet_name": null,
-            "admin_username": null,
-            "admin_user_password": null,
-            "admin_user_ssh_key": null,
-            "tags": {
-                "Creator": "GitHub Actions"
+        "compute_target_to_use_for_training": "amlcompute",
+        "training": {
+            "amlcompute":{
+                "name": "my-aml-cluster",
+                "vm_size": "STANDARD_D2_V2",
+                "vm_priority": "dedicated",
+                "min_nodes": 0,
+                "max_nodes": 4,
+                "idle_seconds_before_scaledown": "300",
+                "vnet_resource_group_name": null,
+                "vnet_name": null,
+                "subnet_name": null,
+                "admin_username": null,
+                "admin_user_password": null,
+                "admin_user_ssh_key": null,
+                "tags": {
+                    "Creator": "GitHub Actions"
+                },
+                "description": "AMLCompute for GitHub Actions"
             },
-            "description": "AMLCompute for GitHub Actions"
+            "dsvm":{
+                "name": "my-vm",
+                "vm_size": "Standard_D2_v2",
+                "location": null,
+                "ssh_port": null
+            },
+            "remotecompute":{
+                "name": "my-remote-vm",
+                "use_ssh_auth": false,
+                "address": "",
+                "username": "",
+                "password": null,
+                "ssh_port": 22,
+                "private_key_file": null,
+                "private_key_passphrase": null
+            }
         },
-        "dsvm":{
-            "name": "my-vm",
-            "vm_size": "Standard_D2_v2",
-            "location": null,
-            "ssh_port": null
-        },
-        "remotecompute":{
-            "name": "my-remote-vm",
-            "use_ssh_auth": false,
-            "address": "",
-            "username": "",
-            "password": null,
-            "ssh_port": 22,
-            "private_key_file": null,
-            "private_key_passphrase": null
+        "deployment": {
+            "aci": {
+
+            }
         }
     },
     "deployment": {
@@ -169,7 +176,7 @@
             "entry_script": "score.py",
             "source_directory": "code/scoring/",
             "runtime": "python",
-            "conda_file": "code/scoring/conda_dependencies.yml",
+            "conda_file": "conda_dependencies.yml",
             "docker": {
                 "use_gpu": false,
                 "cuda_version": null,
@@ -187,7 +194,7 @@
             "description": "Image registered by GitHub Actions",
             "use_custom_environment": false
         },
-        "dev": {
+        "dev_deployment": {
             "name": "devACI"
         },
         "test": {

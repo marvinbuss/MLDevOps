@@ -35,7 +35,7 @@ print("Loading settings")
 with open(os.path.join("aml_service", "settings.json")) as f:
     settings = json.load(f)
 workspace_config_settings = settings["workspace"]["config"]
-remotecompute_settings = settings["compute_target"]["remotecompute"]
+remotecompute_settings = settings["compute_target"]["training"]["remotecompute"]
 
 # Get workspace
 print("Loading Workspace")

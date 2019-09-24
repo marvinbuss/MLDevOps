@@ -68,10 +68,10 @@ inference_config = InferenceConfig(entry_script=deployment_settings["image"]["en
                                    base_image=deployment_settings["image"]["docker"]["custom_image"],
                                    base_image_registry=container_registry,
                                    cuda_version=deployment_settings["image"]["docker"]["cuda_version"])
-#TODO: Enable custom environment and register environment
 profile = Model.profile(ws, "GitHub Actions Profiling", [model], inference_config, test_sample)
 profile.wait_for_profiling(True)
 print(profile.get_results(), profile.recommended_cpu, profile.recommended_cpu_latency, profile.recommended_memory, profile.recommended_memory_latency, sep="\n")
+#TODO: Enable custom environment and register environment
 
 # Create Docker Image
 print("Creating Docker Image")

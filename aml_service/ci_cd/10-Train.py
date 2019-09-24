@@ -41,8 +41,8 @@ print("Loading settings")
 with open(os.path.join("aml_service", "settings.json")) as f:
     settings = json.load(f)
 experiment_settings = settings["experiment"]
-compute_target_to_use = settings["compute_target"]["compute_target_to_use"].strip().lower()
-compute_target_name = settings["compute_target"][compute_target_to_use]["name"]
+compute_target_to_use = settings["compute_target"]["compute_target_to_use_for_training"].strip().lower()
+compute_target_name = settings["compute_target"]["training"][compute_target_to_use]["name"]
 workspace_config_settings = settings["workspace"]["config"]
 
 # Get workspace

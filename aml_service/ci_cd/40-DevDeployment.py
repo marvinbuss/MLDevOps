@@ -26,7 +26,7 @@ POSSIBILITY OF SUCH DAMAGE.
 import os, json
 from azureml.core import Workspace
 from azureml.core.model import Model
-from azureml.core.webservice import AciWebservice, Webservice
+from azureml.core.webservice import AciWebservice
 from azureml.core.authentication import AzureCliAuthentication
 
 # Load the JSON settings file and relevant section
@@ -51,8 +51,29 @@ print("Loading Model Profile")
 with open(os.path.join("aml_service", "profiling_result.json")) as f:
     profiling_result = json.load(f)
 
+# Defining inference config
+print("Defining InferenceConfig")
+inference_config = InferenceConfig(entry_script=deployment_settings["image"]["entry_script"],
+                                   source_directory=deployment_settings["image"]["source_directory"],
+                                   runtime=deployment_settings["image"]["runtime"],
+                                   conda_file=deployment_settings["image"]["conda_file"],
+                                   extra_docker_file_steps=deployment_settings["image"]["docker"]["extra_docker_file_steps"],
+                                   enable_gpu=deployment_settings["image"]["docker"]["use_gpu"],
+                                   description=deployment_settings["image"]["description"],
+                                   base_image=deployment_settings["image"]["docker"]["custom_image"],
+                                   base_image_registry=container_registry,
+                                   cuda_version=deployment_settings["image"]["docker"]["cuda_version"])
+
 try:
-    dev_service = Webservice(workspace=ws, name=aci_service_name)
-    dev_service.update(image=image)
-except expression as identifier:
-    pass
+    print("Trying to update existing ACI service")
+    dev_service = AciWebservice(workspace=ws, name=deployment_settings["dev_deployment"]["name"])
+    dev_service.update(models=[model], inference_config=inference_config)
+    print("Successfully updated existing ACI service")
+except:
+    print("Failed to update ACI service... Creating new ACI instance")
+    aciconfig = AciWebservice.deploy_configuration(
+        cpu_cores=1,
+        memory_gb=1,
+        tags={"area": "diabetes", "type": "regression"},
+        description="A sample description",
+    )
