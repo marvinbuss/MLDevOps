@@ -50,3 +50,15 @@ jobs:
     - name: Profile Model
       run: |
         python 'aml_service/ci_cd/30-ProfileModel.py'
+    
+    - name: Dev Deployment
+      run: |
+        python 'aml_service/ci_cd/40-DevDeployment.py'
+    
+    - name: Test Deployment
+      run: |
+        python 'aml_service/ci_cd/50-TestDeployment.py'
+    
+    - name: Production Deployment
+      run: |
+        python 'aml_service/ci_cd/60-ProdDeployment.py'
