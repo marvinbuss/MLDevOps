@@ -64,7 +64,7 @@ conda_dep = CondaDependencies.create(conda_packages=deployment_settings["image"]
                                  pip_packages=deployment_settings["image"]["dependencies"]["pip_packages"],
                                  python_version=deployment_settings["image"]["dependencies"]["python_version"],
                                  pin_sdk_version=deployment_settings["image"]["dependencies"]["pin_sdk_version"])
-dep_path = os.path.join("aml_service", "myenv.yml")
+dep_path = os.path.join("code", "scoring", "myenv.yml")
 conda_dep.save(path=dep_path)
 
 # Creating InferenceConfig

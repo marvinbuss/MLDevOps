@@ -78,5 +78,5 @@ except:
 ws.write_config(path=workspace_config_settings["path"], file_name=workspace_config_settings["file_name"])
 
 # Print Workspace details --> only print, if repository is private
-#print(ws.name, ws.resource_group, ws.location, ws.subscription_id, sep="\n")
+print(ws.name, ws.resource_group, ws.location, ws.subscription_id, sep="\n")
 print("Successfully loaded Workspace")
