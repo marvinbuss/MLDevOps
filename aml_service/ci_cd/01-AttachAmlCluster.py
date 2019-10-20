@@ -94,10 +94,10 @@ cluster.wait_for_completion(show_output=True)
 
 # Checking status of AMLCompute Cluster
 print("Checking status of AMLCompute Cluster")
-if cluster.get_status() != "Succeeded":
+if cluster.provisioning_state != "Succeeded":
     raise Exception(
         "Deployment of AMLCompute Cluster failed with the following status: {} and logs: \n{}".format(
-            cluster.get_status(), cluster.provisioning_errors
+            cluster.provisioning_state, cluster.provisioning_errors
         )
     )
     #sys.exit(0)

@@ -92,10 +92,10 @@ aks_prod_cluster.wait_for_completion(show_output=True)
 
 # Checking status of Test AKS Cluster
 print("Checking status of Test AKS Cluster")
-if aks_prod_cluster.get_status() != "Succeeded":
+if aks_prod_cluster.provisioning_state != "Succeeded":
     raise Exception(
         "Deployment of Test AKS Cluster failed with the following status: {} and logs: \n {}".format(
-            aks_prod_cluster.get_status(), aks_prod_cluster.provisioning_errors
+            aks_prod_cluster.provisioning_state, aks_prod_cluster.provisioning_errors
         )
     )
     #sys.exit(0)

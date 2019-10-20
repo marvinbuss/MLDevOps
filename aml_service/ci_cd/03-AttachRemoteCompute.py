@@ -74,10 +74,10 @@ remote_compute.wait_for_completion(show_output=True)
 
 # Checking status of Remote Compute
 print("Checking status of Remote Compute")
-if remote_compute.get_status() != "Succeeded":
+if remote_compute.provisioning_state != "Succeeded":
     raise Exception(
         "Deployment of Remote Compute failed with the following status: {} and logs: \n{}".format(
-            remote_compute.get_status(), remote_compute.provisioning_errors
+            remote_compute.provisioning_state, remote_compute.provisioning_errors
         )
     )
     #sys.exit(0)

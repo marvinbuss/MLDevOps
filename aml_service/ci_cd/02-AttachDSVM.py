@@ -65,10 +65,10 @@ dsvm_compute.wait_for_completion(show_output=True)
 
 # Checking status of DSVM
 print("Checking status of DSVM")
-if dsvm_compute.get_status() != "Succeeded":
+if dsvm_compute.provisioning_state != "Succeeded":
     raise Exception(
         "Deployment of DSVM failed with the following status: {} and logs: \n{}".format(
-            dsvm_compute.get_status(), dsvm_compute.provisioning_errors
+            dsvm_compute.provisioning_state, dsvm_compute.provisioning_errors
         )
     )
     #sys.exit(0)
