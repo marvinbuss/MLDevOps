@@ -34,7 +34,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.externals import joblib
 
 RANDOM_STATE = 42
-MODEL_NAME = "my-model.pkl"
+MODEL_NAME = "mymodel.pkl"
 
 print("Creating output folder")
 os.makedirs('./outputs', exist_ok=True)
