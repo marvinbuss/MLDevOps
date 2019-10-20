@@ -98,7 +98,7 @@ print(registered_env.name, "Version: " + registered_env.version, sep="\n")
 # Profile model
 print("Profiling Model")
 test_sample = json.dumps({'data': [[1,2,3,4,5,6,7,8,9,10]]})
-profile = Model.profile(workkspace=ws,
+profile = Model.profile(workspace=ws,
                         profile_name=deployment_settings["image"]["name"],
                         models=[model],
                         inference_config=inference_config,
