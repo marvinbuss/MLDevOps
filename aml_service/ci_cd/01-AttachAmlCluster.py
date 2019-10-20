@@ -87,7 +87,17 @@ except ComputeTargetException:
         compute_config.admin_user_ssh_key = aml_settings["admin_user_ssh_key"]
     
     # Create Compute Target
-    cluster = ComputeTarget.create(ws, aml_settings["name"], compute_config)
+    cluster = ComputeTarget.create(workspace=ws, name=aml_settings["name"], provisioning_configuration=compute_config)
 
 # Wait until the cluster is attached
 cluster.wait_for_completion(show_output=True)
+
+# Checking status of AMLCompute Cluster
+print("Checking status of AMLCompute Cluster")
+if cluster.get_status() != "Succeeded":
+    raise Exception(
+        "Deployment of AMLCompute Cluster failed with the following status: {} and logs: \n{}".format(
+            cluster.get_status(), cluster.provisioning_errors
+        )
+    )
+    #sys.exit(0)

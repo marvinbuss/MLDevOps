@@ -224,13 +224,13 @@ if experiment_settings["use_custom_environment"]:
     env = utils.get_environment()
     old_env_variables = estimator._estimator_config.environment.environment_variables
     env.environment_variables.update(old_env_variables)
-    estimator._estimator_config.environment = env
+    estimator.run_config.environment = env
 print(estimator.run_config)
 
-# Register Environment
+# Registering Environment
 print("Registering Environment")
 env = estimator.run_config.environment
-env.name = experiment_settings["name"]
+env.name = experiment_settings["name"] + "_training"
 registered_env = env.register(workspace=ws)
 print("Registered Environment")
 print(registered_env.name, "Version: " + registered_env.version, sep="\n")
@@ -258,16 +258,18 @@ else:
 print("Submitting an experiment and creating a run")
 run = exp.submit(run_config, tags=experiment_settings["run_tags"])
 
-# Shows output of the run on stdout.
+# Shows output of the run on stdout
 run.wait_for_completion(show_output=True, wait_post_processing=True)
 
-# Raise exception if run fails
-if run.get_status() == "Failed":
+# Checking status of Run
+print("Checking status Run")
+if run.get_status() != "Completed":
     raise Exception(
         "Training on local failed with following run status: {} and logs: \n {}".format(
             run.get_status(), run.get_details_with_logs()
         )
     )
+    #sys.exit(0)
 
 # Writing the run id to /aml_service/run_id.json
 run_details = {}

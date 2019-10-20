@@ -148,21 +148,43 @@
             }
         },
         "deployment": {
-            "aci": {
-                "tags": {
-                    "Creator": "GitHub Actions"
-                },
-                "properties": {
-                    "Creator": "GitHub Actions"
-                },
-                "description": "ACI Service created by GitHub Actions"
+            "aci_dev": {},
+            "aks_test": {
+                "name": "testAKS",
+                "agent_count": 1,
+                "vm_size": "STANDARD_D3_V2",
+                "ssl_cname": null,
+                "ssl_cert_pem_file": null,
+                "ssl_key_pem_file": null,
+                "location": null,
+                "vnet_resourcegroup_name": null,
+                "vnet_name": null,
+                "subnet_name": null,
+                "service_cidr": null,
+                "dns_service_ip": null,
+                "docker_bridge_cidr": null
+            },
+            "aks_prod": {
+                "name": "prodAKS",
+                "agent_count": 3,
+                "vm_size": "STANDARD_D3_V2",
+                "ssl_cname": null,
+                "ssl_cert_pem_file": null,
+                "ssl_key_pem_file": null,
+                "location": null,
+                "vnet_resourcegroup_name": null,
+                "vnet_name": null,
+                "subnet_name": null,
+                "service_cidr": null,
+                "dns_service_ip": null,
+                "docker_bridge_cidr": null
             }
         }
     },
     "deployment": {
         "model": {
-            "name": "my-model",
-            "path": "outputs/my-model.pkl",
+            "name": "mymodel",
+            "path": "outputs/mymodel.pkl",
             "evaluation_parameters": {
                 "larger_is_better": [],
                 "smaller_is_better": ["mse"]
@@ -179,10 +201,16 @@
             "datasets": null
         },
         "image": {
+            "name": "myimage",
             "entry_script": "score.py",
             "source_directory": "code/scoring/",
             "runtime": "python",
-            "conda_file": "conda_dependencies.yml",
+            "dependencies": {
+                "conda_packages": ["numpy","scikit-learn"],
+                "pip_packages": ["azureml-defaults"],
+                "python_version": "3.6.2",
+                "pin_sdk_version": true
+            },
             "docker": {
                 "use_gpu": false,
                 "cuda_version": null,
@@ -197,17 +225,72 @@
             "tags":{
                 "Creator":"GitHub Actions"
             },
+            "properties":{
+                "Creator":"GitHub Actions"
+            },
             "description": "Image registered by GitHub Actions",
             "use_custom_environment": false
         },
         "dev_deployment": {
-            "name": "devACI"
+            "name": "devACI",
+            "auth_enabled": false,
+            "ssl_enabled": false,
+            "ssl_cert_pem_file": null,
+            "ssl_key_pem_file": null,
+            "ssl_cname": null,
+            "enable_app_insights": true,
+            "location": null,
+            "dns_name_label": null
         },
-        "test": {
-            "name": "testAKS"
+        "test_deployment": {
+            "name": "testAKS",
+            "autoscale_enabled": true,
+            "autoscale_min_replicas": 1,
+            "autoscale_max_replicas": 10,
+            "autoscale_refresh_seconds": 1,
+            "autoscale_target_utilization": 70,
+            "collect_model_data": true,
+            "auth_enabled": true,
+            "enable_app_insights": true,
+            "scoring_timeout_ms": null,
+            "replica_max_concurrent_requests": null,
+            "max_request_wait_time": null,
+            "num_replicas": null,
+            "gpu_cores": null,
+            "period_seconds": 10,
+            "initial_delay_seconds": null,
+            "timeout_seconds": 1,
+            "success_threshold": 1,
+            "failure_threshold": 3,
+            "namespace": null,
+            "token_auth_enabled": false,
+            "primary_key": null,
+            "secondary_key": null
         },
-        "prod": {
-            "name": "prodAKS"
+        "prod_deployment": {
+            "name": "prodAKS",
+            "autoscale_enabled": true,
+            "autoscale_min_replicas": 1,
+            "autoscale_max_replicas": 10,
+            "autoscale_refresh_seconds": 1,
+            "autoscale_target_utilization": 70,
+            "collect_model_data": true,
+            "auth_enabled": true,
+            "enable_app_insights": true,
+            "scoring_timeout_ms": null,
+            "replica_max_concurrent_requests": null,
+            "max_request_wait_time": null,
+            "num_replicas": null,
+            "gpu_cores": null,
+            "period_seconds": 10,
+            "initial_delay_seconds": null,
+            "timeout_seconds": 1,
+            "success_threshold": 1,
+            "failure_threshold": 3,
+            "namespace": null,
+            "token_auth_enabled": false,
+            "primary_key": null,
+            "secondary_key": null
         }
     },
     "workspace":{

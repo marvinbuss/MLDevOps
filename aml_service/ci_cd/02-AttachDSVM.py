@@ -58,6 +58,17 @@ except ComputeTargetException:
         dsvm_config.location = dsvm_settings["location"]
     if dsvm_settings["ssh_port"]:
         dsvm_config.ssh_port = dsvm_settings["ssh_port"]
-    dsvm_compute = DsvmCompute.create(ws, name=dsvm_settings["name"], provisioning_configuration=dsvm_config)
+    
+    dsvm_compute = DsvmCompute.create(workspace=ws, name=dsvm_settings["name"], provisioning_configuration=dsvm_config)
 
 dsvm_compute.wait_for_completion(show_output=True)
+
+# Checking status of DSVM
+print("Checking status of DSVM")
+if dsvm_compute.get_status() != "Succeeded":
+    raise Exception(
+        "Deployment of DSVM failed with the following status: {} and logs: \n{}".format(
+            dsvm_compute.get_status(), dsvm_compute.provisioning_errors
+        )
+    )
+    #sys.exit(0)

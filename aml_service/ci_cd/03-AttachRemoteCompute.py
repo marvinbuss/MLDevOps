@@ -68,6 +68,16 @@ except ComputeTargetException:
         attach_config.password = remotecompute_settings["password"]
     
     # Attach the compute
-    remote_compute = ComputeTarget.attach(ws, remotecompute_settings["name"], attach_config)
+    remote_compute = ComputeTarget.attach(workspace=ws, name=remotecompute_settings["name"], attach_configuration=attach_config)
 
 remote_compute.wait_for_completion(show_output=True)
+
+# Checking status of Remote Compute
+print("Checking status of Remote Compute")
+if remote_compute.get_status() != "Succeeded":
+    raise Exception(
+        "Deployment of Remote Compute failed with the following status: {} and logs: \n{}".format(
+            remote_compute.get_status(), remote_compute.provisioning_errors
+        )
+    )
+    #sys.exit(0)

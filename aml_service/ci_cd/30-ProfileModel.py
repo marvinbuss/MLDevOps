@@ -27,14 +27,17 @@ import os, json, azureml.core
 from azureml.core import Workspace, ContainerRegistry, Environment
 from azureml.core.model import Model, InferenceConfig
 from azureml.core.image import Image, ContainerImage
+from azureml.core.conda_dependencies import CondaDependencies
 from azureml.core.authentication import AzureCliAuthentication
+from helper import utils
 
-# Load the JSON settings file and relevant section
+# Load the JSON settings file and relevant sections
 print("Loading settings")
 with open(os.path.join("aml_service", "settings.json")) as f:
     settings = json.load(f)
 workspace_config_settings = settings["workspace"]["config"]
 deployment_settings = settings["deployment"]
+env_name = settings["experiment"]["name"]  + "_deployment"
 
 # Get Workspace
 print("Loading Workspace")
@@ -55,32 +58,63 @@ if deployment_settings["image"]["docker"]["custom_image"]:
 else:
     container_registry = None
 
+# Creating dependencies
+print("Creating dependencies and registering environment")
+conda_dep = CondaDependencies.create(conda_packages=deployment_settings["image"]["dependencies"]["conda_packages"],
+                                 pip_packages=deployment_settings["image"]["dependencies"]["pip_packages"],
+                                 python_version=deployment_settings["image"]["dependencies"]["python_version"],
+                                 pin_sdk_version=deployment_settings["image"]["dependencies"]["pin_sdk_version"])
+dep_path = os.path.join("aml_service", "myenv.yml")
+conda_dep.save(path=dep_path)
+
+# Creating InferenceConfig
+print("Creating InferenceConfig")
+if deployment_settings["image"]["use_custom_environment"]:
+    env = utils.get_environment(name_suffix="_deployment")
+    inferenceConfig = InferenceConfig(entry_script=deployment_settings["image"]["entry_script"],
+                                      source_directory=deployment_settings["image"]["source_directory"],
+                                      runtime=deployment_settings["image"]["runtime"],
+                                      environment=env)
+else:
+    inference_config = InferenceConfig(entry_script=deployment_settings["image"]["entry_script"],
+                                       source_directory=deployment_settings["image"]["source_directory"],
+                                       runtime=deployment_settings["image"]["runtime"],
+                                       conda_file=os.path.basename(dep_path),
+                                       extra_docker_file_steps=deployment_settings["image"]["docker"]["extra_docker_file_steps"],
+                                       enable_gpu=deployment_settings["image"]["docker"]["use_gpu"],
+                                       description=deployment_settings["image"]["description"],
+                                       base_image=deployment_settings["image"]["docker"]["custom_image"],
+                                       base_image_registry=container_registry,
+                                       cuda_version=deployment_settings["image"]["docker"]["cuda_version"])
+
+# Registering Environment
+print("Registering Environment")
+if "env" not in locals():
+    env = Environment.from_conda_specification(name=env_name, file_path=dep_path)
+registered_env = env.register(workspace=ws)
+print("Registered Environment")
+print(registered_env.name, "Version: " + registered_env.version, sep="\n")
+
 # Profile model
 print("Profiling Model")
 test_sample = json.dumps({'data': [[1,2,3,4,5,6,7,8,9,10]]})
-inference_config = InferenceConfig(entry_script=deployment_settings["image"]["entry_script"],
-                                   source_directory=deployment_settings["image"]["source_directory"],
-                                   runtime=deployment_settings["image"]["runtime"],
-                                   conda_file=deployment_settings["image"]["conda_file"],
-                                   extra_docker_file_steps=deployment_settings["image"]["docker"]["extra_docker_file_steps"],
-                                   enable_gpu=deployment_settings["image"]["docker"]["use_gpu"],
-                                   description=deployment_settings["image"]["description"],
-                                   base_image=deployment_settings["image"]["docker"]["custom_image"],
-                                   base_image_registry=container_registry,
-                                   cuda_version=deployment_settings["image"]["docker"]["cuda_version"])
-profile = Model.profile(ws, "githubactionsprofiling", [model], inference_config, test_sample)
-profile.wait_for_profiling(True)
+profile = Model.profile(workkspace=ws,
+                        profile_name=deployment_settings["image"]["name"],
+                        models=[model],
+                        inference_config=inference_config,
+                        input_data=test_sample)
+profile.wait_for_profiling(show_output=True)
 print(profile.get_results(), profile.recommended_cpu, profile.recommended_cpu_latency, profile.recommended_memory, profile.recommended_memory_latency, sep="\n")
-#TODO: Enable custom environment and register environment
 
 # Create Docker Image
-print("Creating Docker Image")
-package = Model.package(workspace=ws, models=[model], inference_config=inference_config, generate_dockerfile=True)
-package.wait_for_creation(show_output=True)
+#print("Creating Docker Image")
+#package = Model.package(workspace=ws, models=[model], inference_config=inference_config, generate_dockerfile=True)
+#package.wait_for_creation(show_output=True)
 
 # Writing the profiling results to /aml_service/profiling_result.json
 profiling_result = {}
 profiling_result["cpu"] = profile.recommended_cpu
 profiling_result["memory"] = profile.recommended_memory
+profiling_result["image_id"] = profile.image_id
 with open(os.path.join("aml_service", "profiling_result.json"), "w") as outfile:
     json.dump(profiling_result, outfile)

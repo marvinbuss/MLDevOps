@@ -7,13 +7,13 @@ from azureml.train.hyperdrive import choice, randint, uniform, quniform, logunif
 from azureml.exceptions import RunConfigurationException
 
 
-def get_environment():
+def get_environment(name_suffix="_training"):
     # Load the JSON settings file
     print("Loading settings")
     with open(os.path.join("aml_config", "settings.json")) as f:
         settings = json.load(f)
     env_settings = settings["environment"]
-    env_name = settings["experiment"]["environment_name"]
+    env_name = settings["experiment"]["name"]  + name_suffix
 
     # Create Dependencies
     print("Defining Conda Dependencies")
@@ -24,7 +24,7 @@ def get_environment():
         python_version=env_settings["python_version"],
         pin_sdk_version=env_settings["pin_sdk_version"]
         )
-    conda_dep.save_to_file(env_settings["dependencies_config"]["path"], conda_file_path=env_settings["dependencies_config"]["file_name"])
+    conda_dep.save(path=env_settings["dependencies_config"]["path"])
 
     # Create Environment and setting parameters
     print("Creating Environment")
@@ -94,7 +94,7 @@ def get_parameter_distribution(parameter_name, parameter_setting):
     elif "normal" in parameter_setting["distribution"]:
         parameter_distr = normal(mu=parameter_setting["parameters"]["mu"], sigma=parameter_setting["parameters"]["sigma"])
     elif "qnormal" in parameter_setting["distribution"]:
-        parameter_distr = normal(mu=parameter_setting["parameters"]["mu"], sigma=parameter_setting["parameters"]["sigma"], q=parameter_setting["parameters"]["q"])
+        parameter_distr = qnormal(mu=parameter_setting["parameters"]["mu"], sigma=parameter_setting["parameters"]["sigma"], q=parameter_setting["parameters"]["q"])
     elif "lognormal" in parameter_setting["distribution"]:
         parameter_distr = lognormal(mu=parameter_setting["parameters"]["mu"], sigma=parameter_setting["parameters"]["sigma"])
     elif "qlognormal" in parameter_setting["distribution"]:

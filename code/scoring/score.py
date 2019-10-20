@@ -23,9 +23,8 @@ IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THE SOFTWARE CODE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
-import pickle
-import json
-import numpy
+import pickle, json, time
+import numpy as np
 from sklearn.externals import joblib
 from sklearn.linear_model import Ridge
 from azureml.core.model import Model
@@ -35,15 +34,14 @@ from azureml.monitoring import ModelDataCollector
 
 def init():
     global model
-    print("Model Initialized" + time.strftime("%H:%M:%S"))
-
+    print("Model Initialized: " + time.strftime("%H:%M:%S"))
     # load the model from file into a global object
-    model_path = Model.get_model_path(model_name="sklearn_regression_model.pkl")
+    model_path = Model.get_model_path(model_name="mymodel")
     model = joblib.load(model_path)
-
+    print("Initialize Data Collectors")
     global inputs_dc, prediction_dc
-    inputs_dc = ModelDataCollector("sklearn_regression_model", identifier="inputs", feature_names=["AGE", "SEX", "BMI". "BP", "S1", "S2", "S3", "S4", "S5", "S6"])
-    prediction_dc = ModelDataCollector("sklearn_regression_model", identifier="predictions", feature_names=["Y"])
+    inputs_dc = ModelDataCollector(model_name="sklearn_regression_model", feature_names=["AGE", "SEX", "BMI", "BP", "S1", "S2", "S3", "S4", "S5", "S6"])
+    prediction_dc = ModelDataCollector(model_name="sklearn_regression_model", feature_names=["Y"])
 
 #input_sample = np.array([[10.0,9.0,8.0,7.0,6.0,5.0,4.0,3.0,2.0,1.0]])
 #output_sample = np.array([3726.995])
@@ -54,7 +52,7 @@ def run(raw_data):
     global inputs_dc, prediction_dc
     try:
         data = json.loads(raw_data)["data"]
-        data = numpy.array(data)
+        data = np.array(data)
         result = model.predict(data)
 
         print("Saving Data " + time.strftime("%H:%M:%S"))
@@ -66,11 +64,3 @@ def run(raw_data):
         error = str(e)
         print(error + time.strftime("%H:%M:%S"))
         return json.dumps({"error": error})
-
-
-if __name__ == "__main__":
-    # Test scoring
-    init()
-    test_row = '{"data":[[1,2,3,4,5,6,7,8,9,10],[10,9,8,7,6,5,4,3,2,1]]}'
-    prediction = run(test_row)
-    print("Test result: ", prediction)
