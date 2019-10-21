@@ -152,7 +152,7 @@
             "aks_test": {
                 "name": "testAKS",
                 "agent_count": 1,
-                "vm_size": "STANDARD_D3_V2",
+                "vm_size": "Standard_D3_v2",
                 "ssl_cname": null,
                 "ssl_cert_pem_file": null,
                 "ssl_key_pem_file": null,
@@ -167,7 +167,7 @@
             "aks_prod": {
                 "name": "prodAKS",
                 "agent_count": 3,
-                "vm_size": "STANDARD_D3_V2",
+                "vm_size": "Standard_D3_v2",
                 "ssl_cname": null,
                 "ssl_cert_pem_file": null,
                 "ssl_key_pem_file": null,
