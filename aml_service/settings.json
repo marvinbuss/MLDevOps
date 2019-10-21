@@ -232,7 +232,7 @@
             "use_custom_environment": false
         },
         "dev_deployment": {
-            "name": "devACI",
+            "name": "dev-aci",
             "auth_enabled": false,
             "ssl_enabled": false,
             "ssl_cert_pem_file": null,
@@ -243,7 +243,7 @@
             "dns_name_label": null
         },
         "test_deployment": {
-            "name": "testAKS",
+            "name": "test-aks",
             "autoscale_enabled": true,
             "autoscale_min_replicas": 1,
             "autoscale_max_replicas": 10,
@@ -268,7 +268,7 @@
             "secondary_key": null
         },
         "prod_deployment": {
-            "name": "prodAKS",
+            "name": "prod-aks",
             "autoscale_enabled": true,
             "autoscale_min_replicas": 1,
             "autoscale_max_replicas": 10,
