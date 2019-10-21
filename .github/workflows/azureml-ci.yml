@@ -1,13 +1,11 @@
-name: DevOps for ML (CI)
+name: DevOps for ML (CI/CD)
 
 on:
   push:
     branches:
     - master
     paths:
-    - 'code/training/*'
-    - 'code/testing/*'
-    - 'code/scoring/*'
+    - 'code/**'
 
 jobs:
   training:
