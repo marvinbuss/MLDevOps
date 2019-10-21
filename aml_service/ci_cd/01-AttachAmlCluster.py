@@ -56,10 +56,11 @@ try:
         raise ComputeTargetException("Cluster is of incorrect size or has incorrect priority. Deleting cluster and provisioning a new one.")
     
     # Update AMLCompute
-    print("Updating settings of Cluster")
-    cluster.update(min_nodes=aml_settings["min_nodes"],
-                   max_nodes=aml_settings["max_nodes"],
-                   idle_seconds_before_scaledown=aml_settings["idle_seconds_before_scaledown"])
+    if cluster.provisioning_configuration.min_nodes != aml_settings["min_nodes"] or cluster.provisioning_configuration.max_nodes != aml_settings["max_nodes"] or cluster.provisioning_configuration.idle_seconds_before_scaledown != aml_settings["idle_seconds_before_scaledown"]:
+        print("Updating settings of Cluster")
+        cluster.update(min_nodes=aml_settings["min_nodes"],
+                       max_nodes=aml_settings["max_nodes"],
+                       idle_seconds_before_scaledown=aml_settings["idle_seconds_before_scaledown"])
     print("Successfully updated Cluster definition")
 except ComputeTargetException:
     print("Loading failed")
