@@ -207,7 +207,7 @@
             "runtime": "python",
             "dependencies": {
                 "conda_packages": ["numpy","scikit-learn"],
-                "pip_packages": ["azureml-monitoring"],
+                "pip_packages": ["azureml-defaults", "azureml-monitoring"],
                 "python_version": "3.6.2",
                 "pin_sdk_version": true
             },
