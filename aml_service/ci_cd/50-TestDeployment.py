@@ -79,8 +79,8 @@ except ComputeTargetException:
                                                            docker_bridge_cidr=aks_compute_settings["docker_bridge_cidr"],
                                                            cluster_purpose=AksCompute.ClusterPurpose.DEV_TEST)
     # Deploy to VNET if provided 
-    if aks_compute_settings["vnet_resource_group_name"] and aks_compute_settings["vnet_name"] and aks_compute_settings["subnet_name"]:
-        compute_config.vnet_resourcegroup_name = aks_compute_settings["vnet_resource_group_name"]
+    if aks_compute_settings["vnet_resourcegroup_name"] and aks_compute_settings["vnet_name"] and aks_compute_settings["subnet_name"]:
+        compute_config.vnet_resourcegroup_name = aks_compute_settings["vnet_resourcegroup_name"]
         compute_config.vnet_name = aks_compute_settings["vnet_name"]
         compute_config.subnet_name = aks_compute_settings["subnet_name"]
     
