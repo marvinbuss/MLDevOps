@@ -49,6 +49,7 @@ try:
     print("Found existing VM")
     if dsvm_compute.vm_size != dsvm_settings["vm_size"] or dsvm_compute.location != dsvm_settings["location"]:
         dsvm_compute.delete()
+        dsvm_compute.wait_for_completion(show_output=True)
         raise ComputeTargetException("VM is of incorrect size or was deployed in a different location. Deleting VM and provisioning a new one.")
 except ComputeTargetException:
     print("Loading failed")
@@ -59,9 +60,11 @@ except ComputeTargetException:
     if dsvm_settings["ssh_port"]:
         dsvm_config.ssh_port = dsvm_settings["ssh_port"]
     
+    # Create Compute Target
     dsvm_compute = DsvmCompute.create(workspace=ws, name=dsvm_settings["name"], provisioning_configuration=dsvm_config)
 
-dsvm_compute.wait_for_completion(show_output=True)
+    # Wait until the VM is attached
+    dsvm_compute.wait_for_completion(show_output=True)
 
 # Checking status of DSVM
 print("Checking status of DSVM")

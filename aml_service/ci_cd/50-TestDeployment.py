@@ -89,9 +89,9 @@ except ComputeTargetException:
     
     # Create Compute Target
     aks_test_cluster = ComputeTarget.create(workspace=ws, name=aks_compute_settings["name"], provisioning_configuration=compute_config)
-
-# Wait until the cluster is attached
-aks_test_cluster.wait_for_completion(show_output=True)
+    
+    # Wait until the cluster is attached
+    aks_test_cluster.wait_for_completion(show_output=True)
 
 # Checking status of Test AKS Cluster
 print("Checking status of Test AKS Cluster")

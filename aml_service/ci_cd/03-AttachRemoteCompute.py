@@ -70,7 +70,8 @@ except ComputeTargetException:
     # Attach the compute
     remote_compute = ComputeTarget.attach(workspace=ws, name=remotecompute_settings["name"], attach_configuration=attach_config)
 
-remote_compute.wait_for_completion(show_output=True)
+    # Wait until the VM is attached
+    dsvm_compute.wait_for_completion(show_output=True)
 
 # Checking status of Remote Compute
 print("Checking status of Remote Compute")

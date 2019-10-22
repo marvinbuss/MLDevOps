@@ -61,6 +61,10 @@ try:
     cluster.update(min_nodes=aml_settings["min_nodes"],
                    max_nodes=aml_settings["max_nodes"],
                    idle_seconds_before_scaledown=aml_settings["idle_seconds_before_scaledown"])
+    
+    # Wait until the operation has completed
+    cluster.wait_for_completion(show_output=True)
+    
     print("Successfully updated Cluster definition")
 except ComputeTargetException:
     print("Loading failed")
@@ -90,8 +94,8 @@ except ComputeTargetException:
     # Create Compute Target
     cluster = ComputeTarget.create(workspace=ws, name=aml_settings["name"], provisioning_configuration=compute_config)
 
-# Wait until the cluster is attached
-cluster.wait_for_completion(show_output=True)
+    # Wait until the cluster is attached
+    cluster.wait_for_completion(show_output=True)
 
 # Checking status of AMLCompute Cluster
 print("Checking status of AMLCompute Cluster")
