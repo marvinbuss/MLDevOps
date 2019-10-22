@@ -94,9 +94,10 @@ except WebserviceException:
                                                name=aci_settings["name"],
                                                image=image,
                                                deployment_config=aci_config)
+
 # Show output of the deployment on stdout
 dev_service.wait_for_deployment(show_output=True)
-print(dev_service.state)
+print("State of Service: {}".format(dev_service.state))
 
 # Checking status of web service
 print("Checking status of ACI Dev Deployment")
