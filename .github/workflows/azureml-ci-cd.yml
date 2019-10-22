@@ -8,14 +8,16 @@ on:
     - 'code/**'
 
 jobs:
-  training:
-    name: Model Training
+  train-and-deploy:
+    name: Model Training and Deployment
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - name: Check Out Repository
+      uses: actions/checkout@master
     
-    - uses: azure/actions/login@master
+    - name: Azure Login
+      uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     
