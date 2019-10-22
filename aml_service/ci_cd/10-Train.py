@@ -27,7 +27,6 @@ POSSIBILITY OF SUCH DAMAGE.
 import os, json, azureml.core
 from azureml.core import Workspace, Experiment, ContainerRegistry, Environment
 from azureml.core.compute import ComputeTarget
-from azureml.core.compute_target import ComputeTargetException
 from azureml.core.runconfig import MpiConfiguration, TensorflowConfiguration
 from azureml.core.authentication import AzureCliAuthentication
 from azureml.train.dnn import Chainer, PyTorch, TensorFlow, Gloo, Nccl
@@ -97,7 +96,6 @@ if experiment_settings["framework"]["name"] == "chainer":
         script_params=experiment_settings["script_parameters"],
         node_count=experiment_settings["distributed_training"]["node_count"],
         distributed_training=distrib_training_backend,
-        use_gpu=experiment_settings["docker"]["use_gpu"],
         use_docker=experiment_settings["docker"]["use_docker"],
         custom_docker_image=experiment_settings["docker"]["custom_image"],
         image_registry_details=container_registry,
@@ -125,7 +123,6 @@ elif experiment_settings["framework"]["name"] == "pytorch":
         script_params=experiment_settings["script_parameters"],
         node_count=experiment_settings["distributed_training"]["node_count"],
         distributed_training=distrib_training_backend,
-        use_gpu=experiment_settings["docker"]["use_gpu"],
         use_docker=experiment_settings["docker"]["use_docker"],
         custom_docker_image=experiment_settings["docker"]["custom_image"],
         image_registry_details=container_registry,
@@ -153,7 +150,6 @@ elif experiment_settings["framework"]["name"] == "tensorflow":
         script_params=experiment_settings["script_parameters"],
         node_count=experiment_settings["distributed_training"]["node_count"],
         distributed_training=distrib_training_backend,
-        use_gpu=experiment_settings["docker"]["use_gpu"],
         use_docker=experiment_settings["docker"]["use_docker"],
         custom_docker_image=experiment_settings["docker"]["custom_image"],
         image_registry_details=container_registry,
@@ -203,7 +199,6 @@ else:
         node_count=experiment_settings["distributed_training"]["node_count"],
         process_count_per_node=experiment_settings["distributed_training"]["mpi"]["process_count_per_node"],
         distributed_training=distrib_training_backend,
-        use_gpu=experiment_settings["docker"]["use_gpu"],
         use_docker=experiment_settings["docker"]["use_docker"],
         custom_docker_image=experiment_settings["docker"]["custom_image"],
         image_registry_details=container_registry,

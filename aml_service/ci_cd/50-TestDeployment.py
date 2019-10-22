@@ -23,12 +23,16 @@ IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THE SOFTWARE CODE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
-import os, json
+import os, sys, json
 from azureml.core import Workspace, Image
 from azureml.core.webservice import Webservice, AksWebservice
+from azureml.exceptions import WebserviceException
 from azureml.core.authentication import AzureCliAuthentication
 from azureml.core.compute import AksCompute, ComputeTarget
-from azureml.core.compute_target import ComputeTargetException
+from azureml.exceptions import ComputeTargetException
+
+sys.path.insert(0, os.path.join("code", "testing"))
+import test_functions
 
 # Load the JSON settings file and relevant sections
 print("Loading settings")
@@ -66,8 +70,7 @@ try:
     #aks_test_cluster.update()
     #print("Successfully updated Cluster definition")
 except ComputeTargetException:
-    print("Loading failed")
-    print("Creating new Dev AKS Cluster")
+    print("Loading failed ... Creating new Dev AKS Cluster")
     compute_config = AksCompute.provisioning_configuration(agent_count=aks_compute_settings["agent_count"],
                                                            vm_size=aks_compute_settings["vm_size"],
                                                            ssl_cname=aks_compute_settings["ssl_cname"],
@@ -92,13 +95,13 @@ aks_test_cluster.wait_for_completion(show_output=True)
 
 # Checking status of Test AKS Cluster
 print("Checking status of Test AKS Cluster")
-if aks_test_cluster.provisioning_state != "Succeeded":
+if aks_test_cluster.provisioning_state == "Failed":
+    aks_test_cluster.delete()
     raise Exception(
         "Deployment of Test AKS Cluster failed with the following status: {} and logs: \n {}".format(
             aks_test_cluster.provisioning_state, aks_test_cluster.provisioning_errors
         )
     )
-    #sys.exit(0)
 
 # Deploying model on test AKS
 print("Deploying model on Test AKS")
@@ -132,7 +135,7 @@ try:
                        namespace=aks_service_settings["namespace"],
                        token_auth_enabled=aks_service_settings["token_auth_enabled"])
     print("Successfully updated existing AKS test service")
-except:
+except WebserviceException:
     print("Failed to update AKS test service... Creating new AKS test service")
     aks_config = AksWebservice.deploy_configuration(autoscale_enabled=aks_service_settings["autoscale_enabled"],
                                                     autoscale_min_replicas=aks_service_settings["autoscale_min_replicas"],
@@ -180,11 +183,10 @@ if test_service.state != "Healthy":
             test_service.state, test_service.get_logs()
         )
     )
-    #sys.exit(0)
 
 # Testing AKS web service
 print("Testing AKS test web service")
-test_sample = json.dumps({'data': [[1,2,3,4,5,6,7,8,9,10]]})
+test_sample = test_functions.get_test_data_sample()
 print("Test Sample: ", test_sample)
 test_sample_encoded = bytes(test_sample, encoding='utf8')
 try:
@@ -192,8 +194,9 @@ try:
     print(prediction)
 except Exception as e:
     result = str(e)
+    logs = test_service.get_logs()
     test_service.delete()
-    raise Exception("AKS Test web service is not working as expected: \n{}".format(result))
+    raise Exception("AKS Test web service is not working as expected: \n{} \nLogs: \n{}".format(result, logs))
 
 # Delete test AKS service after test
 print("Deleting AKS Test web service after successful test")

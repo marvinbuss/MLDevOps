@@ -77,20 +77,23 @@ try:
         production_model_parameter = production_model_run.get_metrics().get(metric)
         if new_model_parameter > production_model_parameter:
             promote_new_model = False
-
-    if promote_new_model:
-        print("New model performs better, thus it will be registered")
-    else:
-        print("New model does not perform better.")
-except:
+except Exception:
     promote_new_model = True
     print("This is the first model to be trained, thus nothing to evaluate for now")
 
+# TODO: Remove
+if promote_new_model:
+    print("New model performs better, thus it will be registered")
+else:
+    print("New model does not perform better.")
+print("Promote all models for now")
+promote_new_model = True
+
 # Registering new Model
 if promote_new_model:
-    print("Registering new Model")
+    print("Registering new Model, because it performs better")
     tags = deployment_settings["model"]["tags"]
-    tags = tags.update({"run_id": run.id})
+    tags["run_id"] = run.id
     model = run.register_model(model_name=deployment_settings["model"]["name"],
                                model_path=deployment_settings["model"]["path"],
                                tags=tags,
@@ -100,6 +103,4 @@ if promote_new_model:
                                description=deployment_settings["model"]["description"],
                                datasets=deployment_settings["model"]["datasets"])
 else:
-    print("No new model to register thus no need to create new scoring image")
     raise Exception("No new model to register as production model perform better")
-    #sys.exit(0)

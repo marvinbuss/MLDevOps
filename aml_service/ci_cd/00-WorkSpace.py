@@ -27,6 +27,7 @@ POSSIBILITY OF SUCH DAMAGE.
 import os, json, sys, argparse
 import azureml.core
 from azureml.core import Workspace
+from azureml.exceptions import WorkspaceException
 from azureml.core.authentication import AzureCliAuthentication
 
 print("SDK Version of azureml: ", azureml.core.VERSION)
@@ -60,7 +61,7 @@ try:
         auth=cli_auth
     )
     print("Found existing Workspace")
-except:
+except WorkspaceException:
     print("Loading failed")
     print("Creating new Workspace")
     ws = Workspace.create(
@@ -78,5 +79,8 @@ except:
 ws.write_config(path=workspace_config_settings["path"], file_name=workspace_config_settings["file_name"])
 
 # Print Workspace details --> only print, if repository is private
-print(ws.name, ws.resource_group, ws.location, ws.subscription_id, sep="\n")
+print("Workspace name: " + ws.name, 
+      "Azure region: " + ws.location, 
+      "Subscription id: " + ws.subscription_id, 
+      "Resource group: " + ws.resource_group, sep = '\n')
 print("Successfully loaded Workspace")

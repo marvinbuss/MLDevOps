@@ -23,10 +23,14 @@ IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THE SOFTWARE CODE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
-import os, json
+import os, sys, json
 from azureml.core import Workspace, Image
 from azureml.core.webservice import Webservice, AciWebservice
+from azureml.exceptions import WebserviceException 
 from azureml.core.authentication import AzureCliAuthentication
+
+sys.path.insert(0, os.path.join("code", "testing"))
+import test_functions
 
 # Load the JSON settings file and relevant sections
 print("Loading settings")
@@ -69,7 +73,7 @@ try:
                        ssl_cname=aci_settings["ssl_cname"],
                        enable_app_insights=aci_settings["enable_app_insights"])
     print("Successfully updated existing ACI service")
-except:
+except WebserviceException:
     print("Failed to update ACI service... Creating new ACI instance")
     aci_config = AciWebservice.deploy_configuration(cpu_cores=profiling_result["cpu"],
                                                     memory_gb=profiling_result["memory"],
@@ -102,11 +106,10 @@ if dev_service.state != "Healthy":
             dev_service.state, dev_service.get_logs()
         )
     )
-    #sys.exit(0)
 
 # Testing ACI web service
 print("Testing ACI web service")
-test_sample = json.dumps({'data': [[1,2,3,4,5,6,7,8,9,10]]})
+test_sample = test_functions.get_test_data_sample()
 print("Test Sample: ", test_sample)
 test_sample_encoded = bytes(test_sample, encoding='utf8')
 try:
@@ -114,8 +117,9 @@ try:
     print(prediction)
 except Exception as e:
     result = str(e)
+    logs = dev_service.get_logs()
     dev_service.delete()
-    raise Exception("ACI Dev web service is not working as expected: \n{}".format(result))
+    raise Exception("ACI Dev web service is not working as expected: \n{} \nLogs: \n{}".format(result, logs))
 
 # Delete aci after test
 print("Deleting ACI Dev web service after successful test")

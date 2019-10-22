@@ -27,7 +27,7 @@ POSSIBILITY OF SUCH DAMAGE.
 import os, json
 from azureml.core import Workspace
 from azureml.core.compute import DsvmCompute
-from azureml.core.compute_target import ComputeTargetException
+from azureml.exceptions import ComputeTargetException
 from azureml.core.authentication import AzureCliAuthentication
 
 # Load the JSON settings file
@@ -65,10 +65,10 @@ dsvm_compute.wait_for_completion(show_output=True)
 
 # Checking status of DSVM
 print("Checking status of DSVM")
-if dsvm_compute.provisioning_state != "Succeeded":
+if dsvm_compute.provisioning_state == "Failed":
+    dsvm_compute.delete()
     raise Exception(
         "Deployment of DSVM failed with the following status: {} and logs: \n{}".format(
             dsvm_compute.provisioning_state, dsvm_compute.provisioning_errors
         )
     )
-    #sys.exit(0)

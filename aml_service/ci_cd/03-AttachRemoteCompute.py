@@ -27,7 +27,7 @@ POSSIBILITY OF SUCH DAMAGE.
 import os, json
 from azureml.core import Workspace
 from azureml.core.compute import ComputeTarget, RemoteCompute
-from azureml.core.compute_target import ComputeTargetException
+from azureml.exceptions import ComputeTargetException
 from azureml.core.authentication import AzureCliAuthentication
 
 # Load the JSON settings file
@@ -74,10 +74,10 @@ remote_compute.wait_for_completion(show_output=True)
 
 # Checking status of Remote Compute
 print("Checking status of Remote Compute")
-if remote_compute.provisioning_state != "Succeeded":
+if remote_compute.provisioning_state == "Failed":
+    remote_compute.detach()
     raise Exception(
         "Deployment of Remote Compute failed with the following status: {} and logs: \n{}".format(
             remote_compute.provisioning_state, remote_compute.provisioning_errors
         )
     )
-    #sys.exit(0)

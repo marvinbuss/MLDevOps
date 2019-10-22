@@ -27,7 +27,7 @@ POSSIBILITY OF SUCH DAMAGE.
 import os, json
 from azureml.core import Workspace
 from azureml.core.compute import ComputeTarget, AmlCompute
-from azureml.core.compute_target import ComputeTargetException
+from azureml.exceptions import ComputeTargetException
 from azureml.core.authentication import AzureCliAuthentication
 
 # Load the JSON settings file
@@ -95,10 +95,10 @@ cluster.wait_for_completion(show_output=True)
 
 # Checking status of AMLCompute Cluster
 print("Checking status of AMLCompute Cluster")
-if cluster.provisioning_state != "Succeeded":
+if cluster.provisioning_state == "Failed":
+    cluster.delete()
     raise Exception(
         "Deployment of AMLCompute Cluster failed with the following status: {} and logs: \n{}".format(
             cluster.provisioning_state, cluster.provisioning_errors
         )
     )
-    #sys.exit(0)

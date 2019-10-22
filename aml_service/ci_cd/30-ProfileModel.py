@@ -23,13 +23,16 @@ IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY WAY OUT OF THE USE OF THE SOFTWARE CODE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 """
-import os, json, azureml.core
+import os, sys, json, azureml.core
 from azureml.core import Workspace, ContainerRegistry, Environment
 from azureml.core.model import Model, InferenceConfig
 from azureml.core.image import Image, ContainerImage
 from azureml.core.conda_dependencies import CondaDependencies
 from azureml.core.authentication import AzureCliAuthentication
 from helper import utils
+
+sys.path.insert(0, os.path.join("code", "testing"))
+import test_functions
 
 # Load the JSON settings file and relevant sections
 print("Loading settings")
@@ -97,7 +100,7 @@ print(registered_env.name, "Version: " + registered_env.version, sep="\n")
 
 # Profile model
 print("Profiling Model")
-test_sample = json.dumps({'data': [[1,2,3,4,5,6,7,8,9,10]]})
+test_sample = test_functions.get_test_data_sample()
 profile = Model.profile(workspace=ws,
                         profile_name=deployment_settings["image"]["name"],
                         models=[model],
@@ -105,11 +108,6 @@ profile = Model.profile(workspace=ws,
                         input_data=test_sample)
 profile.wait_for_profiling(show_output=True)
 print(profile.get_results(), profile.recommended_cpu, profile.recommended_cpu_latency, profile.recommended_memory, profile.recommended_memory_latency, sep="\n")
-
-# Create Docker Image
-#print("Creating Docker Image")
-#package = Model.package(workspace=ws, models=[model], inference_config=inference_config, generate_dockerfile=True)
-#package.wait_for_creation(show_output=True)
 
 # Writing the profiling results to /aml_service/profiling_result.json
 profiling_result = {}

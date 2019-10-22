@@ -45,7 +45,6 @@
         },
         "docker": {
             "use_docker": true,
-            "use_gpu": false,
             "shm_size": "1g",
             "custom_image": null,
             "custom_image_registry_details": {
