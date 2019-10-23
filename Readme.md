@@ -99,3 +99,10 @@ The GitHub Workflow requires the follwing secrets:
 - [GitHub Actions Documentation](https://help.github.com/en/github/automating-your-workflow-with-github-actions)
 - [Azure Machine Learning Documentation](https://docs.microsoft.com/en-us/azure/machine-learning/)
 - [Azure Machine Learning Python SDK Reference](https://docs.microsoft.com/en-us/python/api/overview/azure/ml/intro?view=azure-ml-py)
+
+## TODO
+
+- Implement automatic Swagger generation
+- Handover of model name to training script
+- Bugfix in model evaluation
+- stop pileine failing if model performs worse: use features in GitHub Actions for improvement
