@@ -76,7 +76,7 @@ elif experiment_settings["distributed_training"]["backend_config"] == "parameter
     distrib_training_backend = TensorflowConfiguration()
     distrib_training_backend.worker_count = experiment_settings["distributed_training"]["parameter_server"]["worker_count"]
     distrib_training_backend.parameter_server_count = experiment_settings["distributed_training"]["parameter_server"]["parameter_server_count"]
-elif experiment_settings["distributed_training"]["backend_config"] == "glue":
+elif experiment_settings["distributed_training"]["backend_config"] == "gloo":
     distrib_training_backend = Gloo()
 elif experiment_settings["distributed_training"]["backend_config"] == "nccl":
     distrib_training_backend = Nccl()
@@ -264,7 +264,6 @@ if run.get_status() != "Completed":
             run.get_status(), run.get_details_with_logs()
         )
     )
-    #sys.exit(0)
 
 # Writing the run id to /aml_service/run_id.json
 run_details = {}
