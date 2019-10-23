@@ -7,7 +7,7 @@
   <img src="pictures/github-actions-azure-machine-learning.png" alt="GitHub Actions and Azure Machine Learning" height="250"/>
 </p>
 
-# ML DevOps with Azure Machine Learning and GitHub Actions
+# ML DevOps with GitHub Actions and Azure ML
 
 This repository demonstrates how to automate the machine learning lifecycle using the CI/CD pipeline tools of [GitHub Actions](https://github.com/features/actions) and [Azure Machine Learning](https://docs.microsoft.com/en-us/azure/machine-learning/) for training and deployment. The repository does not make use of Azure DevOps, but uses [GitHub Actions](https://github.com/features/actions) as a future proof backend system for workflow automation.
 
