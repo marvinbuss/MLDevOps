@@ -34,13 +34,17 @@ from azureml.core.authentication import AzureCliAuthentication
 print("Loading settings")
 with open(os.path.join("aml_service", "settings.json")) as f:
     settings = json.load(f)
-workspace_config_settings = settings["workspace"]["config"]
 dsvm_settings = settings["compute_target"]["training"]["dsvm"]
 
 # Get workspace
 print("Loading Workspace")
 cli_auth = AzureCliAuthentication()
-ws = Workspace.from_config(path=workspace_config_settings["path"], auth=cli_auth, _file_name=workspace_config_settings["file_name"])
+config_file_path = os.environ.get("GITHUB_WORKSPACE", default="aml_service")
+config_file_name = "aml_arm_config.json"
+ws = Workspace.from_config(
+    path=config_file_path,
+    auth=cli_auth,
+    _file_name=config_file_name)
 print(ws.name, ws.resource_group, ws.location, ws.subscription_id, sep = '\n')
 
 try:

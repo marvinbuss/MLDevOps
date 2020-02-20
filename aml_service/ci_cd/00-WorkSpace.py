@@ -43,11 +43,9 @@ parser.add_argument("--location", type=str,  dest="location", help="Region in Az
 parser.add_argument("--friendly-name", type=str,  dest="friendly_name", help="Friendly name of the Azure Machine Learning Workspace")
 args = parser.parse_args()
 
-# Load the JSON settings file
-print("Loading settings")
-with open(os.path.join("aml_service", "settings.json")) as f:
-    settings = json.load(f)
-workspace_config_settings = settings["workspace"]["config"]
+# Mask values
+print("Masking values")
+print(f"::add-mask::{args.subscription_id}")
 
 # Use Azure CLI authentication
 cli_auth = AzureCliAuthentication()
@@ -76,11 +74,16 @@ except WorkspaceException:
     )
 
 # Write out the Workspace ARM properties to a config file
-ws.write_config(path=workspace_config_settings["path"], file_name=workspace_config_settings["file_name"])
+config_file_path = os.environ.get("GITHUB_WORKSPACE", default="aml_service")
+config_file_name = "aml_arm_config.json"
+ws.write_config(
+    path=config_file_path,
+    file_name=config_file_name
+)
 
 # Print Workspace details --> only print, if repository is private
-print("Workspace name: " + ws.name, 
-      "Azure region: " + ws.location, 
-      "Subscription id: " + ws.subscription_id, 
+print("Workspace name: " + ws.name,
+      "Azure region: " + ws.location,
+      "Subscription id: " + ws.subscription_id,
       "Resource group: " + ws.resource_group, sep = '\n')
 print("Successfully loaded Workspace")

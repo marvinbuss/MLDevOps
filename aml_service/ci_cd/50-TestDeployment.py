@@ -38,7 +38,6 @@ import test_functions
 print("Loading settings")
 with open(os.path.join("aml_service", "settings.json")) as f:
     settings = json.load(f)
-workspace_config_settings = settings["workspace"]["config"]
 deployment_settings = settings["deployment"]
 aks_service_settings = deployment_settings["test_deployment"]
 aks_compute_settings = settings["compute_target"]["deployment"]["aks_test"]
@@ -48,11 +47,16 @@ print("Loading Model Profile")
 with open(os.path.join("aml_service", "profiling_result.json")) as f:
     profiling_result = json.load(f)
 
-# Get Workspace
+# Get workspace
 print("Loading Workspace")
 cli_auth = AzureCliAuthentication()
-ws = Workspace.from_config(path=workspace_config_settings["path"], auth=cli_auth, _file_name=workspace_config_settings["file_name"])
-print(ws.name, ws.resource_group, ws.location, ws.subscription_id, sep="\n")
+config_file_path = os.environ.get("GITHUB_WORKSPACE", default="aml_service")
+config_file_name = "aml_arm_config.json"
+ws = Workspace.from_config(
+    path=config_file_path,
+    auth=cli_auth,
+    _file_name=config_file_name)
+print(ws.name, ws.resource_group, ws.location, ws.subscription_id, sep = '\n')
 
 # Loading Image
 image_details = profiling_result["image_id"].split(":")

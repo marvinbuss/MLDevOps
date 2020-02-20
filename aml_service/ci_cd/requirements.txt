@@ -1,2 +1,2 @@
-azure-cli==2.0.75
+azure-cli==2.1.0
 azureml-sdk==1.0.69
