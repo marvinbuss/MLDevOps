@@ -36,6 +36,7 @@ deployment_settings = settings["deployment"]
 
 # Get details from Run
 run_id = os.environ.get("RUN_ID", default=None)
+run_details = {}
 run_details["run_id"] = os.environ.get("RUN_ID", default=None)
 run_details["experiment_name"] = os.environ.get("EXPERIMENT_NAME", default=None)
 print(f"RUN_ID: {run_id}")
