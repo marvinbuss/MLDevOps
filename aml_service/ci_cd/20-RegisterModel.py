@@ -38,6 +38,8 @@ deployment_settings = settings["deployment"]
 print("Loading Run Details")
 with open(os.path.join("aml_service", "run_details.json")) as f:
     run_details = json.load(f)
+run_details["run_id"] = run.id
+run_details["experiment_name"] = run.experiment.name
 
 # Get workspace
 print("Loading Workspace")

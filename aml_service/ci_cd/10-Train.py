@@ -270,8 +270,11 @@ if run.get_status() != "Completed":
     )
 
 # Writing the run id to /aml_service/run_id.json
-run_details = {}
+print(f"::set-output name=run_id::{run.id}")
+print(f"::set-output name=experiment_name::{run.experiment.name}")
+
+'''run_details = {}
 run_details["run_id"] = run.id
 run_details["experiment_name"] = run.experiment.name
 with open(os.path.join("aml_service", "run_details.json"), "w") as outfile:
-    json.dump(run_details, outfile)
+    json.dump(run_details, outfile)'''
