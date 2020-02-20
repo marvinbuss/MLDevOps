@@ -4,6 +4,7 @@ on:
   push:
     branches:
     - master
+    - gh-action-extensions 
     paths:
     - 'code/**'
 
@@ -17,48 +18,59 @@ jobs:
       uses: actions/checkout@master
     
     - name: Azure Login
+      id: azure_login
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     
     - name: Set up Python 3.7
+      id: python_setup
       uses: actions/setup-python@v1
       with:
         python-version: 3.7
     
     - name: Install Dependencies
+      id: dependencies_setup
       run: |
         python -m pip install --upgrade pip
         pip install -r 'aml_service/ci_cd/requirements.txt'
     
     - name: Create or Connect to Workspace
+      id: workspace_setup
       run: |
         python 'aml_service/ci_cd/00-WorkSpace.py' --subscription-id ${{ secrets.SUBSCRIPTION_ID }} --workspace-name ${{ secrets.WORKSPACE_NAME }} --resource-group ${{ secrets.RESOURCE_GROUP }} --location ${{ secrets.LOCATION }} --friendly-name ${{ secrets.FRIENDLY_NAME }}
     
     - name: Create or Load Azure Machine Learning Compute
+      id: aml_compute_setup
       run: |
         python 'aml_service/ci_cd/01-AttachAmlCluster.py'
     
     - name: Train Model
+      id: model_training
       run: |
         python 'aml_service/ci_cd/10-Train.py'
     
     - name: Evaluate and Register Model
+      id: model_registration
       run: |
         python 'aml_service/ci_cd/20-RegisterModel.py'
     
     - name: Profile Model
+      id: model_profiling
       run: |
         python 'aml_service/ci_cd/30-ProfileModel.py'
     
     - name: Dev Deployment
+      id: dev_deployment
       run: |
         python 'aml_service/ci_cd/40-DevDeployment.py'
     
     - name: Test Deployment
+      id: test_deployment
       run: |
         python 'aml_service/ci_cd/50-TestDeployment.py'
     
     - name: Production Deployment
+      id: prod_deployment
       run: |
         python 'aml_service/ci_cd/60-ProdDeployment.py'
