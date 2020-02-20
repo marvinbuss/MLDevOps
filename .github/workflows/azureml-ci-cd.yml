@@ -54,6 +54,9 @@ jobs:
       id: model_registration
       run: |
         python 'aml_service/ci_cd/20-RegisterModel.py'
+      env:
+        RUN_ID: ${{ steps.model_training.outputs.run_id }}
+        EXPERIMENT_NAME: ${{ steps.model_training.outputs.experiment_name }}
     
     - name: Profile Model
       id: model_profiling
