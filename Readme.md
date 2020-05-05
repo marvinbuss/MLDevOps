@@ -1,3 +1,5 @@
+### **INFO: We have built a new and even simpler method to do MLOps with GitHub Actions. Please visit this repository to get started: https://github.com/machine-learning-apps/ml-template-azure**
+
 <p align="center">
   <a href="https://github.com/marvinbuss/MLDevOps">
     <img alt="GitHub Actions status" src="https://github.com/marvinbuss/MLDevOps/workflows/DevOps for ML (CI/CD)/badge.svg">
